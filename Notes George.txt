@@ -1,0 +1,5 @@
+Haskell Editor tips:
+
+type :{  in WinGHCi to start multiple line mode,  :}    to end it
+Loads the named file from the main directory;     -   :l filename
+Comment; --Typecommenthere
