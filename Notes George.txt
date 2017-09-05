@@ -10,8 +10,6 @@ WE= Workshop Exercise
 Loading setup makes the solution not work, while adding those lines in 
 the actual solution file works fine. Why?
 
-\ n nameless function of parameter n used for ease
-
 quickcheck test needs to have n>=0 to work, else the test fails. 
 The assumption itself gives different numbers if n<0 so this is correct.
 added n>=0 in quickcheck and test works.
@@ -32,3 +30,24 @@ Or is it because of the nature of the property?
 It not working with integers and instead having to use bool
 tells me that we are testing against the definition(?) of the
 property instead of something more robust like a standard int result.
+
+-Task4-
+In order to test the reversal property, a simple re-reversal of the
+number should suffice, as it should give back the original number.
+A test that reverses a number twice and compares it to the 
+original was made.
+
+In order to make a set of the primes < 10000 that follow the property
+given in the specification, I used takeWhile and filter.
+
+takeWhile saves the elements of the list that return true to its
+condition. So in this case takeWhile(<10000) saves numbers <10000.
+
+In order to now find the primes that we want, we use filter.
+Filter returns the numbers that return true to its condition.
+Using the original function given in the lab notes that finds primes,
+we filter the primes that have had a reversal so far(as n value gets higher)
+This means we don't get any duplicate numbers.
+so we filter any prime number: if current prime's reverse is a prime
+
+

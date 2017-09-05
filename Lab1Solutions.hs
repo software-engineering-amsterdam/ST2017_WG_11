@@ -66,10 +66,29 @@ perms (x:xs) = concat (map (insrt x) (perms xs)) where
   insrt x [] = [[x]]
   insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
 
---Not completed  
+--Not completed - 30 mins spent so far
   
 --Task 4
 
+reversal :: Integer -> Integer
+reversal = read . reverse . show
+
+--if we reverse a reversed number it should give us the starting number.
+--To test:
+
+testreverse = \ n -> prime n --> reversal ( reversal n) == n
+
+testrev = quickCheckResult (testreverse)
+
+--problem solution
+
+primelist = takeWhile(<10000)(filter(prime.reversal)primes)
+
+--1hr, notes updated
+
+--Task 5
+
+--use head and tail of primes???
 
 
 
