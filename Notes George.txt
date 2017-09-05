@@ -21,5 +21,14 @@ https://stackoverflow.com/questions/7368926/division-in-haskell
 apparently in haskell / is used in Fractions while div with Integers
 
 -WE2-
-Same as WE1, but different function. Use map(^x) to make the list
+Same as WE1, but different function. Use map(^x) to make the set
 use every number to the power of x
+
+-WE4- 
+Unsure if this is correct. Test runs forever which I assume is
+due to the large number of elements that can be in the lists.
+This is a hard property to test but is it because of the size?
+Or is it because of the nature of the property?
+It not working with integers and instead having to use bool
+tells me that we are testing against the definition(?) of the
+property instead of something more robust like a standard int result.

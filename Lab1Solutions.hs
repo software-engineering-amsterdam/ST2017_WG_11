@@ -1,4 +1,4 @@
---Setup
+--Setup from lab notes
 
 module Lab1Answers where
 import Data.List
@@ -19,7 +19,7 @@ p --> q = (not p) || q
 forall :: [a] -> (a -> Bool) -> Bool
 forall = flip all
 
---Workshop exercise 1 as a test (Working) took about 2 hours
+--Workshop exercise 1 as a test (Working) to learn the language a bit took about 2 hours
 
 f1, f2 :: Int -> Int
 f1 = \ n -> sum [0..n]
@@ -50,6 +50,36 @@ test3 = quickCheckResult (\n -> n>=0 --> f31 n == f32 n)
 --5 minutes spent.
 
 --Workshop exercise 4 (Task 2)
+
+f4 :: Integer -> Bool
+f4 = \ n ->  2^(length [1..n]) == length (subsequences [1..n])
+
+test4 = quickCheckResult (f4)
+
+--1hr spent, unsure if correct, notes updated
+
+--Workshop exercise 5 (Task 3)
+
+perms :: [a] ->[[a]]
+perms [] = [[]]
+perms (x:xs) = concat (map (insrt x) (perms xs)) where
+  insrt x [] = [[x]]
+  insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
+
+--Not completed  
+  
+--Task 4
+
+
+
+
+
+
+
+
+
+
+
 
 
 
