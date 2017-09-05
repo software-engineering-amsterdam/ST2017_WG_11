@@ -90,14 +90,16 @@ primelist = takeWhile(<10000)(filter(prime.reversal)primes)
 
 --sum 101 numbers, check if sum is prime, if not remove head and try again.
 
+
+
 --So far : 2hrs
 --Task 6
 
-solution :: [[Integer]]
-solution = [ xl | xl <- [ take n primes | n <- [2..] ], not (prime(calc(xl)))]
+solution :: Integer --[ x | x <- l, p x ]	keep elements (matching) 
+solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product ps + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
 
-calc :: [Integer] -> Integer
-calc xl = product (xl + 1)
+
+
 
 --Not working
 
