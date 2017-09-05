@@ -125,7 +125,7 @@ luhn :: Integer -> Bool
 luhn n = algorithm (toDigits (reversal n))
 
 algorithm :: [Integer] -> Bool
-algorithm (x:xs) = (sum (iterate2nd (xs)) + x) `mod` 10 == 0
+algorithm (x:xs) = (sum (iterate2nd (x:xs)) + x) `mod` 10 == 0
 
 iterate2nd :: [Integer] -> [Integer]
 iterate2nd [] = []
