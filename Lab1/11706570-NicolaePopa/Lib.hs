@@ -100,3 +100,50 @@ performComputations :: [Integer] -> Int -> [Integer]
 performComputations xs p | prime(sum sublist) = sublist 
                          | otherwise = performComputations (tail xs) p
                          where sublist = take p xs
+
+--ex6
+--generate only the first counterexample
+getFirstNonPrime :: [Integer] -> Int -> [Integer]
+getFirstNonPrime xs p | prime((product sublist) + 1) = getFirstNonPrime xs (p + 1)
+                      | otherwise =  sublist 
+                      where sublist = take p xs
+
+--generates all of them
+getNonPrimeAll :: [Integer] -> Int -> [[Integer]]
+getNonPrimeAll xs p | prime((product sublist) + 1) = getNonPrimeAll xs (p + 1)
+                         | otherwise = sublist : getNonPrimeAll xs (p + 1)
+                         where sublist = take p xs
+
+--ex7
+--Luhn Algorithm
+luhn :: Integer -> Bool
+luhn n = algorithm (intToList n)
+
+algorithm :: [Integer] -> Bool
+algorithm (check:xs) = (sum (map (\x -> if x > 9 then x - 9 else x) (multiplyOddPos xs 0)) + check) `mod` 10 == 0
+
+multiplyOddPos :: [Integer] -> Integer -> [Integer]
+multiplyOddPos [] i = []
+multiplyOddPos (x:xs) i | i `mod` 2 == 1 = x:(multiplyOddPos xs (i+1))
+                        | otherwise = (x*2):(multiplyOddPos xs (i+1))
+
+intToList :: Integer -> [Integer]
+intToList 0 = []
+intToList n = (n `mod` 10) : intToList (n `div` 10)
+
+isAmericanExpress :: Integer -> Bool
+isAmericanExpress n = (first2 == [3,4] || first2 == [3,7]) && (length listR) == 15 && algorithm listR 
+                  where listR = intToList n
+                        first2 = take 2 (reverse listR)
+
+isMaster :: Integer -> Bool
+isMaster n = (first2 == [5,1] || first2 == [5,2] || first2 == [5,3] || first2 == [5,4] || first2 == [5,5]) && 
+             (length listR) == 16 && 
+             algorithm listR 
+         where listR = intToList n
+               first2 = take 2 (reverse listR)
+               listLength = length listR
+
+isVisa :: Integer -> Bool
+isVisa n = (head (reverse listR)) == 4 && (length listR) == 16 && algorithm listR 
+           where listR = intToList n 
