@@ -3,3 +3,6 @@ Haskell Editor tips:
 type :{  in WinGHCi to start multiple line mode,  :}    to end it
 Loads the named file from the main directory;     -   :l filename
 Comment; --Typecommenthere
+
+
+Loading setup makes the solution not work, while adding those lines in the actual solution file works fine. Why?
