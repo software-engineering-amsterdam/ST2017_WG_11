@@ -88,16 +88,20 @@ primelist = takeWhile(<10000)(filter(prime.reversal)primes)
 
 --Task 5
 
---use head and tail of primes???
+--sum 101 numbers, check if sum is prime, if not remove head and try again.
 
+--So far : 2hrs
+--Task 6
 
+solution :: [[Integer]]
+solution = [ xl | xl <- [ take n primes | n <- [2..] ], not (prime(calc(xl)))]
 
+calc :: [Integer] -> Integer
+calc xl = product (xl + 1)
 
+--Not working
 
-
-
-
-
+--Task 7
 
 
 
