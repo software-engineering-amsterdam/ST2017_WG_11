@@ -1,0 +1,53 @@
+Haskell Editor tips:
+
+type :{  in WinGHCi to start multiple line mode,  :}    to end it
+Loads the named file from the main directory;     -   :l filename
+Comment; --Typecommenthere
+
+WE= Workshop Exercise
+
+-WE1-
+Loading setup makes the solution not work, while adding those lines in 
+the actual solution file works fine. Why?
+
+quickcheck test needs to have n>=0 to work, else the test fails. 
+The assumption itself gives different numbers if n<0 so this is correct.
+added n>=0 in quickcheck and test works.
+
+`div` works but not the (/) function
+https://stackoverflow.com/questions/7368926/division-in-haskell
+apparently in haskell / is used in Fractions while div with Integers
+
+-WE2-
+Same as WE1, but different function. Use map(^x) to make the set
+use every number to the power of x
+
+-WE4- 
+Unsure if this is correct. Test runs forever which I assume is
+due to the large number of elements that can be in the lists.
+This is a hard property to test but is it because of the size?
+Or is it because of the nature of the property?
+It not working with integers and instead having to use bool
+tells me that we are testing against the definition(?) of the
+property instead of something more robust like a standard int result.
+
+-Task4-
+In order to test the reversal property, a simple re-reversal of the
+number should suffice, as it should give back the original number.
+A test that reverses a number twice and compares it to the 
+original was made.
+
+In order to make a set of the primes < 10000 that follow the property
+given in the specification, I used takeWhile and filter.
+
+takeWhile saves the elements of the list that return true to its
+condition. So in this case takeWhile(<10000) saves numbers <10000.
+
+In order to now find the primes that we want, we use filter.
+Filter returns the numbers that return true to its condition.
+Using the original function given in the lab notes that finds primes,
+we filter the primes that have had a reversal so far(as n value gets higher)
+This means we don't get any duplicate numbers.
+so we filter any prime number: if current prime's reverse is a prime
+
+
