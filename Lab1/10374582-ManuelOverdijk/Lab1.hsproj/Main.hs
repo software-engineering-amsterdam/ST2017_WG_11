@@ -117,9 +117,30 @@ calcPrime a = (product a) + 1
 smallestNonPrime = calcPrime (head nonPrimes)
 
 -- Exercise 7
+-- Source (with changes): https://stackoverflow.com/a/3963628/4230326
+toDigits :: Integer -> [Integer]
+toDigits n = map (\x -> read [x] :: Integer) (show n)
 
 luhn :: Integer -> Bool
-luhn 0 = False
+luhn n = algorithm (toDigits (reversal n))
+
+algorithm :: [Integer] -> Bool
+algorithm (x:xs) = (sum (iterate2nd (xs)) + x) `mod` 10 == 0
+
+iterate2nd :: [Integer] -> [Integer]
+iterate2nd [] = []
+iterate2nd [x] = [x]
+iterate2nd (x:y:xs) = x : luhnCalc y : iterate2nd xs
+
+
+luhnCalc :: Integer -> Integer
+luhnCalc n | (n * 2) > 9 = (n * 2) - 9
+           | otherwise = n
+
+isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+isAmericanExpress n = False
+isMaster n = False
+isVisa n = False
 
 
 
