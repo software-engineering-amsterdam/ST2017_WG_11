@@ -95,8 +95,10 @@ primelist = takeWhile(<10000)(filter(prime.reversal)primes)
 --So far : 2hrs
 --Task 6
 
-solution :: Integer --[ x | x <- l, p x ]	keep elements (matching) 
-solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product ps + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
+--[ x | x <- l, p x ]	keep elements (matching) - from http://rigaux.org/language-study/syntax-across-languages-per-language/Haskell.html
+
+solution :: Integer -> [Integer] -> Integer
+--solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product xs + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
 
 
 
@@ -104,6 +106,46 @@ solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (p
 --Not working
 
 --Task 7
+
+{-| use luhn to write functions isAmericanExpress, isMaster, isVisa :: Integer -> Bool for checking whether an input number is a valid American Express Card, Master Card, or Visa Card number. Consult Wikipedia for the relevant properties.{
+1. From the rightmost digit, which is the check digit, and moving left, double the value of every second digit. If the result of this doubling operation is greater than 9 (e.g., 8 × 2 = 16), 
+then add the digits of the product (e.g., 16: 1 + 6 = 7, 18: 1 + 8 = 9) or alternatively subtract 9 from the product (e.g., 16: 16 - 9 = 7, 18: 18 - 9 = 9).
+2. Take the sum of all the digits.
+3. If the total modulo 10 is equal to 0 (if the total ends in zero) then the number is valid according to the Luhn formula; else it is not valid.
+
+-}
+
+luhn :: Integer -> Bool
+isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+
+
+DoubleEveryTwo :: [Integer] -> [Integer]
+DoubleEveryTwo [] = []
+DoubleEveryTwo [x:[]] = []
+DoubleEveryTwo (x:y:xs) = x: 2*y : DoubleEveryTwo xs
+
+-- we can find the first digit of the number by using n mod 10, and the 2nd digit with n div 10. This works because the product of doubling one number can never be a triple digit number.
+-- n `mod` 10,  n `div` 10
+
+sumNo :: Integer -> Integer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
