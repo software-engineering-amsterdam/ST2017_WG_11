@@ -27,12 +27,29 @@ f2 = \ n -> (n*(n+1)) `div` 2
 
 test1 = quickCheckResult (\n -> n>=0 --> f1 n == f2 n)
 
+--2 hrs spent, notes added in notes file
+
 --Workshop exercise 2 (Task 1)
 
-f11, f21  :: Int -> Int
-f11 = \ n -> sum[1^2..n^2]
-f21 = \ n -> (n*(n+1)*(2*n+1)) `div` 6
+f21, f22  :: Int -> Int
+f21 = \ n -> sum(map (^2) [1..n])
+f22 = \ n -> (n*(n+1)*(2*n+1)) `div` 6
 
-test2 = quickCheckResult (\n -> n>=0 --> f11 n == f21 n)
+test2 = quickCheckResult (\n -> n>=0 --> f21 n == f22 n)
+
+--15 minutes spent. Notes added in notes file.
+
+--Workshop exercise 3 (Task 1)
+
+f31, f32 :: Int -> Int
+f31 = \ n -> sum(map (^3) [1..n])
+f32 = \ n -> (n*(n+1) `div` 2)^2
+
+test3 = quickCheckResult (\n -> n>=0 --> f31 n == f32 n)
+
+--5 minutes spent.
+
+--Workshop exercise 4 (Task 2)
+
 
 

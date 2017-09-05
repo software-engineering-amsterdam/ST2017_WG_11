@@ -4,5 +4,22 @@ type :{  in WinGHCi to start multiple line mode,  :}    to end it
 Loads the named file from the main directory;     -   :l filename
 Comment; --Typecommenthere
 
+WE= Workshop Exercise
 
-Loading setup makes the solution not work, while adding those lines in the actual solution file works fine. Why?
+-WE1-
+Loading setup makes the solution not work, while adding those lines in 
+the actual solution file works fine. Why?
+
+\ n nameless function of parameter n used for ease
+
+quickcheck test needs to have n>=0 to work, else the test fails. 
+The assumption itself gives different numbers if n<0 so this is correct.
+added n>=0 in quickcheck and test works.
+
+`div` works but not the (/) function
+https://stackoverflow.com/questions/7368926/division-in-haskell
+apparently in haskell / is used in Fractions while div with Integers
+
+-WE2-
+Same as WE1, but different function. Use map(^x) to make the list
+use every number to the power of x
