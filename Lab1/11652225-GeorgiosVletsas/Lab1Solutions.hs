@@ -154,15 +154,19 @@ threeStepResult c = sumDigits(sumDoubles(doubleEverySecond c))
 --Time spent for working luhn implementation: 3hr and 30 minutes
 
 
+isVisa :: Integer -> Bool
+isVisa acc = (head cardNo == 4) && (intListLength cardNo == 16) && (luhn acc)
+         where cardNo = digits acc 
+
+isMaster :: Integer -> Bool
+isMaster acc = (take 2 cardNo == [5,1] || take 2 cardNo == [5,2] || take 2 cardNo == [5,3] || take 2 cardNo == [5,4] || take 2 cardNo == [5,5] ) && (intListLength cardNo == 16) && (luhn acc)
+         where cardNo = digits acc
 
 
+isAmericanExpress :: Integer -> Bool
+isAmericanExpress acc = (take 2 cardNo == [3,4] || take 2 cardNo == [3,7]) && (intListLength cardNo == 15) && (luhn acc)
+         where cardNo = digits acc
 
-
-
-
-
-
-
-
+--Additional time spent for cards: 30 minutes
 
 
