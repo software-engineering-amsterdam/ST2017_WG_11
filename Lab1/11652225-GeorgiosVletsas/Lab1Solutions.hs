@@ -56,8 +56,17 @@ f4 = \ n ->  2^(length [1..n]) == length (subsequences [1..n])
 
 test4 = quickCheckResult (f4)
 
---1hr spent, unsure if correct, notes updated
+{--1hr spent, unsure if correct, notes updated
+Unsure if this is correct. Test runs forever which I assume is
+due to the large number of elements that can be in the lists.
+This is a hard property to test but is it because of the size?
+Or is it because of the nature of the property?
+It not working with integers and instead having to use bool
+tells me that we are testing against the definition(?) of the
+property instead of something more robust like a standard int result.
+It seems like a hard property to test
 
+-}
 --Workshop exercise 5 (Task 3)
 
 perms :: [a] ->[[a]]
@@ -86,30 +95,33 @@ primelist = takeWhile(<10000)(filter(prime.reversal)primes)
 
 --1hr, notes updated
 
---Task 5
+--TASK 5
 
---sum 101 numbers, check if sum is prime, if not remove head and try again.
+{--sum 101 numbers, check if sum is prime, if not remove head and try again.
 
+checkSum :: [Integer] -> Integer
+checkSum [] = 0
+checkSum [x] = 0
+checkSum (x:xs) 
+   | sum ( take 101 (x:xs)) == prime    = 1
+   | otherwise                          = checkSum xs
+   
+-}
 
+--So far : 2hrs, not working
 
---So far : 2hrs
 --Task 6
 
---[ x | x <- l, p x ]	keep elements (matching) - from http://rigaux.org/language-study/syntax-across-languages-per-language/Haskell.html
+{--[ x | x <- l, p x ]	keep elements (matching) - from http://rigaux.org/language-study/syntax-across-languages-per-language/Haskell.html
 
---solution :: Integer -> [Integer] -> Integer
---solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product xs + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
-
-
+solution :: Integer -> [Integer] -> Integer
+solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product xs + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
 
 
---Not working
+--Not working - 1hr 
+-}
 
 --Task 7
-
-{-| use luhn to write functions isAmericanExpress, isMaster, isVisa :: Integer -> Bool for checking whether an input number is a valid American Express Card, Master Card, or Visa Card number. Consult Wikipedia for the relevant properties.{
-
--}
 
 
 luhn :: Integer -> Bool
@@ -124,7 +136,7 @@ intListLength [] = 0
 intListLength (x:xs) = 1 + intListLength xs
 
 --condition to add the double digits, returns individual digits added if y>9
--- we can find the first digit of the number by using n mod 10, and the 2nd digit with n div 10. This works because the product of doubling one number can never be a triple digit number.
+-- we can find the first digit of the number by using n mod 10, and the 2nd digit with n div 10. This works because the product of doubling one number can never be a triple digit number (would need multiple mods and divs then).
 -- n `mod` 10,  n `div` 10
 doubleCalc :: Integer -> Integer
 doubleCalc y = if y > 9 then (y `mod` 10)+(y `div` 10) else y
@@ -169,4 +181,27 @@ isAmericanExpress acc = (take 2 cardNo == [3,4] || take 2 cardNo == [3,7]) && (i
 
 --Additional time spent for cards: 30 minutes
 
+{--
+Testing can be done by checking fake and valid numbers with all the functions and see the result. Also, by testing every step of the algorithm to see if we get the expected output.
+e.g. save a number f = 378282246310005 which is a valid american express number. Also try adding a number at the end so that the test can be done with odd numbered accounts and even numbered accounts
+use g = digits f to turn it into a list. Type g to test the output
+use gd = doubleEverySecond g to see if every second number got doubled correctly. Type gd to test the output and compare to g
+use gds = sumDoubles gd to sum everything above 9 to single digits. Type gds and see the result
+use gs = sumDigits gds to sum every digit together.
+Now gs `mod` 10 should give us our answer if the account is valid. If it is 0 it means that it is valid.
+
+These tests can be tried with long and short numbers, odd numbered and even numbered, and valid and non existing accounts. 
+Using case statements with various testing numbers and defining expected results as a test is an option, however I did not have the time to implement this so far.
+The case statement should go through every one of the numbers as a test, and if all the expected values (Boolean) are correct, then the test is passed.
+
+
+Valid Card numbers for testing:
+American Express - 378282246310005
+American Express - 371449635398431
+
+MasterCard - 5555555555554444
+MasterCard - 5105105105105100
+
+Visa - 4012888888881881
+-}
 

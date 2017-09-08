@@ -21,39 +21,18 @@ forall = flip all
 ------------------------------------------------------------------------------------------ TESTING DOCUMENT TO TEST CODE PARTS BEFORE IMPLEMENTING
 
 
-luhn :: Integer -> Bool
-luhn acc = (test(digits acc) + ((test(digits acc)*9) `mod` 10 )) `mod` 10 == 0
+--Task 5
 
-digits :: Integer -> [Integer]
-digits = map (read . (:[])) . show
-
-summedDig :: Integer -> Integer
-summedDig y = if y > 9 then (y `mod` 10)+(y `div` 10) else y
-
-
-doublelist :: [Integer] -> [Integer]
-doublelist [] = []
-doublelist (x:[]) = []
-doublelist (x:(y:xs)) = x:y*2: doublelist xs
-
-
-sumNo :: [Integer] -> [Integer]
-sumNo [] = []
-sumNo (x:[]) = []
-sumNo (x:y:xs) = x: summedDig y : sumNo xs
-
-sumDigits :: [Integer] -> Integer
-sumDigits [] = 0
-sumDigits (x:xs) = x + sumDigits xs
-
-
-test :: [Integer] -> Integer
-test c = sumDigits(sumNo(doublelist c))
+--sum 101 numbers, check if sum is prime, if not remove head and try again.
 
 
 
-
-
+checkSum :: [Integer] -> Integer
+checkSum [] = 0
+checkSum [x] = 0
+checkSum (x:xs) 
+   | sum ( take 101 (x:xs)) == prime    = 1
+   | otherwise                          = checkSum xs
 
 
 
