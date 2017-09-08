@@ -97,7 +97,7 @@ primelist = takeWhile(<10000)(filter(prime.reversal)primes)
 
 --[ x | x <- l, p x ]	keep elements (matching) - from http://rigaux.org/language-study/syntax-across-languages-per-language/Haskell.html
 
-solution :: Integer -> [Integer] -> Integer
+--solution :: Integer -> [Integer] -> Integer
 --solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product xs + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
 
 
@@ -108,34 +108,50 @@ solution :: Integer -> [Integer] -> Integer
 --Task 7
 
 {-| use luhn to write functions isAmericanExpress, isMaster, isVisa :: Integer -> Bool for checking whether an input number is a valid American Express Card, Master Card, or Visa Card number. Consult Wikipedia for the relevant properties.{
-1. From the rightmost digit, which is the check digit, and moving left, double the value of every second digit. If the result of this doubling operation is greater than 9 (e.g., 8 × 2 = 16), 
-then add the digits of the product (e.g., 16: 1 + 6 = 7, 18: 1 + 8 = 9) or alternatively subtract 9 from the product (e.g., 16: 16 - 9 = 7, 18: 18 - 9 = 9).
-2. Take the sum of all the digits.
-3. If the total modulo 10 is equal to 0 (if the total ends in zero) then the number is valid according to the Luhn formula; else it is not valid.
 
 -}
 
+
 luhn :: Integer -> Bool
-isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+luhn acc = (threeStepResult(digits acc)) `mod` 10 == 0
 
+--make integer into list
+digits :: Integer -> [Integer]
+digits = map (read . (:[])) . show
 
-DoubleEveryTwo :: [Integer] -> [Integer]
-DoubleEveryTwo [] = []
-DoubleEveryTwo [x:[]] = []
-DoubleEveryTwo (x:y:xs) = x: 2*y : DoubleEveryTwo xs
+intListLength :: [Integer] -> Integer
+intListLength [] = 0
+intListLength (x:xs) = 1 + intListLength xs
 
+--condition to add the double digits, returns individual digits added if y>9
 -- we can find the first digit of the number by using n mod 10, and the 2nd digit with n div 10. This works because the product of doubling one number can never be a triple digit number.
 -- n `mod` 10,  n `div` 10
+doubleCalc :: Integer -> Integer
+doubleCalc y = if y > 9 then (y `mod` 10)+(y `div` 10) else y
 
-sumNo :: Integer -> Integer
+--doubles every second number
+doubleEverySecond :: [Integer] -> [Integer]
+doubleEverySecond [] = []
+doubleEverySecond (x:[]) = [x]
+doubleEverySecond (x:(y:xs)) = if (odd (intListLength(x:(y:xs)))) then (x:y*2: doubleEverySecond xs) else (x*2:y: doubleEverySecond xs)
+
+--step 2, sums all double digit numbers
+sumDoubles :: [Integer] -> [Integer]
+sumDoubles [] = []
+sumDoubles (x:[]) = [x]
+sumDoubles (x:y:xs) = if (odd (intListLength(x:(y:xs)))) then (x: doubleCalc y : sumDoubles xs) else (doubleCalc x: y : sumDoubles xs)
+
+--step 3, sums all digits of the acc number.
+sumDigits :: [Integer] -> Integer
+sumDigits [] = 0
+sumDigits (x:xs) = x + sumDigits xs
+
+--combines the 3 steps in one function, giving us the sum of all digits of the account
+threeStepResult :: [Integer] -> Integer
+threeStepResult c = sumDigits(sumDoubles(doubleEverySecond c))
 
 
-
-
-
-
-
-
+--Time spent for working luhn implementation: 3hr and 30 minutes
 
 
 
