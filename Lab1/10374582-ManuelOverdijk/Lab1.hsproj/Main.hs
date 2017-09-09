@@ -42,22 +42,18 @@ e32 = \ n -> (^2) (n * ( n + 1) `div` 2)
 test2 = quickCheck' (\ n -> n >= 0 --> e31 n == e32 n)
 
 -- Exercise 2
--- Time spent: 0
+-- Time spent: 1h
 
--- subsequences :: [a] -> [[a]]
- 
 e41, e42 :: [a] -> Int
 e41 = \ l -> length l
 e42 = \ l -> length (subsequences l)
  
 test3 = quickCheck' (\ n -> n >= 0 --> e42 [1..n] == (2^(e41 [1..n])))
 
--- Testing the property for integer lists of the form [1..n].
--- TODO explenations
-
+-- The property is hard to test due to the fact that the complexity is in exponential time.
 
 -- Exercise 3
--- Time spent: 0
+-- Time spent: 2h
 
 -- Workshop Exercise 5
 
@@ -76,7 +72,8 @@ e51 = \ n -> length (perms [1..n])
 e52 = \ n ->  factorial n
 
 test5 = quickCheck' (\ n  -> (n >= 0 && n < 6) --> e51 n == e52 n)
--- TODO explenations
+
+-- The property is hard to test due to the fact that the complexity is in factorial time.
 
 -- Exercise 4
 -- Time spent: 1.5h
@@ -102,7 +99,8 @@ isPrimeSumRecursive n (x:xs)  | prime (sum (take n (x:xs))) = take n (x:xs)
 e101 = isPrimeSumRecursive 101 primes
 smallestPrime = sum e101
 
--- Do you have to test that your answer is correct? How could this be checked?
+-- TODO explanation
+
 
 -- Exercise 6
 -- Time spent: 1h
@@ -116,8 +114,11 @@ calcPrime a = (product a) + 1
 -- Smalles counter example:
 smallestNonPrime = calcPrime (head nonPrimes)
 
+
 -- Exercise 7
--- Source (with changes): https://stackoverflow.com/a/3963628/4230326
+-- Time spent: 3h
+-- Not working as of yet
+-- Source of toDigits (with changes): https://stackoverflow.com/a/3963628/4230326
 toDigits :: Integer -> [Integer]
 toDigits n = map (\x -> read [x] :: Integer) (show n)
 
@@ -141,6 +142,9 @@ isAmericanExpress, isMaster, isVisa :: Integer -> Bool
 isAmericanExpress n = False
 isMaster n = False
 isVisa n = False
+
+-- Exercise 8
+-- Time spent: 0
 
 
 
