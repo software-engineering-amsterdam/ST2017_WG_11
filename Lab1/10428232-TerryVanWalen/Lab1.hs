@@ -1,9 +1,10 @@
+--
+
 module Lab1Answers where
 import Data.List
 import Test.QuickCheck
 
 infix 1 -->
-
 (-->) :: Bool -> Bool -> Bool
 p --> q = (not p) || q
 
@@ -19,9 +20,10 @@ power p (x:xs) = (x^p) : (power p xs)
 
 
 --Exercise 1:
+-- For this exercise I used the answers on the course page. When implementing I did not understand what \n did but could guess it was some sort of variable assignment that I needed because the test would not work without this. After reading The Haskell Road to logic I learned that this are lambda functions. My question is how do lambda functions differ from just providing a parameter to the function?
 f21, f22 :: Int -> Int
-f21 = \n -> sum (power 2 [0..n])
-f22 = \n -> div (product [n, n+1,2*n + 1]) 6
+f21 \n = \n -> sum (power 2 [0..n])
+f22 \n = \n -> div (product [n, n+1,2*n + 1]) 6
 test11 = quickCheckResult (\n -> n >= 0 --> f21 n == f22 n)
 
 f31, f32 :: Int -> Int
@@ -105,10 +107,16 @@ f6 p xs | prime((product sublist) + 1) = f6 (p+1) xs
         where sublist = take (p) xs
 
 
+
+
+-- -- -- Exercise 7
+luhn :: Integer -> Bool
+luhn d = mod (sum (doubleEverySecond (toDigitsAndReverse d))) 10 == 0
+
 toDigitsAndReverse :: Integer -> [Integer]
 toDigitsAndReverse d | d < 10 = [d]
                      | otherwise = mod d 10 : toDigitsAndReverse (div d 10)
---
+
 doubleEverySecond :: [Integer] -> [Integer]
 doubleEverySecond [] = []
 doubleEverySecond [x] = [x]
@@ -118,16 +126,70 @@ addDigitsIfGreater9 :: Integer -> Integer
 addDigitsIfGreater9 d | d > 9 = d - 9
                       | otherwise = d
 
--- -- -- Exercise 7
-luhn :: Integer -> Bool
-luhn i = mod (sum (doubleEverySecond (toDigitsAndReverse i))) 10 == 0
+-- To know the bank we can check the first few digits and the number of digits
+isAmericanExpress, isMaster, isVisa :: Integer -> Bool
+isAmericanExpress d | integerStartWith d [34, 37]
+                      && numDigits d == 15
+                      && luhn d
+                      = True
+                    | otherwise = False
 
-f7 = luhn 4716010268081706
---
--- doubleEverySecond :: [Integer] -> [Integer]
--- doubleEverySecond [] = []
--- doubleEverySecond [x] = [x]
--- doubleEverySecond (x, y, zs) = x : addDigitsIfGreater9(y*2) : doubleEverySecond zs
---
--- addDigitsIfGreater9 :: Integer -> Integer
--- addDigitsIfGreater9 d | d > 9 = d - 9
+isMaster d          | integerStartWith d (mergeLists [51..55] [222100..272099])
+                      && numDigits d == 16
+                      && luhn d
+                      = True
+                    | otherwise = False
+
+isVisa d            | integerStartWith d [4]
+                      && elem (numDigits d) [13, 16, 19]
+                      && luhn d
+                      = True
+                    | otherwise = False
+
+-- Only need it for positive numbers
+numDigits :: Integer -> Integer
+numDigits d | d == 0    = 1
+            | d > 0     = 1 + truncate (logBase 10 (fromIntegral d))
+            | d < 0     = error "Not a positive integer"
+            | otherwise = error "NumDigits otherwise error"
+
+
+-- MergeLists retrieved from: https://stackoverflow.com/a/3938449/8102945
+mergeLists :: [a] -> [a] -> [a]
+mergeLists xs     []     = xs
+mergeLists []     ys     = ys
+mergeLists (x:xs) (y:ys) = x : y : mergeLists xs ys
+
+
+integersStartSame :: Integer -> Integer -> Bool
+integersStartSame d n | d > n && div d divider == n = True
+                      | otherwise = False
+                      where divider = 10^((numDigits d) - (numDigits n))
+
+integerStartWith :: Integer -> [Integer] -> Bool
+integerStartWith i []     = False
+integerStartWith i (d:ds) | integersStartSame i d = True
+                          | otherwise             = integerStartWith i ds
+
+-- Testcases based on: https://www.freeformatter.com/credit-card-number-generator-validator.html
+-- If only one cardnumber is returned than it is valid
+testingcardnumbers = [4716010268081706, 2221006169315674, 340593225932303]
+visacase      = filter isVisa testingcardnumbers
+mastercase    = filter isMaster testingcardnumbers
+americancase  = filter isAmericanExpress testingcardnumbers
+
+
+-- Exercise 8:
+data Boy = Matthew | Peter | Jack | Arnold | Carl
+          deriving (Eq,Show)
+
+boys = [Matthew, Peter, Jack, Arnold, Carl]
+
+accuses :: Boy -> Boy -> Bool
+accuses Matthew Matthew = False
+accuses Matthew Carl = False
+
+accusers :: Boy -> [Boy]
+accusers b1 =
+
+guilty, honest :: [Boy]
