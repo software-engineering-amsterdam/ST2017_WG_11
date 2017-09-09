@@ -101,7 +101,7 @@ performComputations xs p | prime(sum sublist) = sublist
                          | otherwise = performComputations (tail xs) p
                          where sublist = take p xs
 
---ex6
+--ex6 - 30min
 --generate only the first counterexample
 getFirstNonPrime :: [Integer] -> Int -> [Integer]
 getFirstNonPrime xs p | prime((product sublist) + 1) = getFirstNonPrime xs (p + 1)
@@ -115,7 +115,7 @@ getNonPrimeAll xs p | prime((product sublist) + 1) = getNonPrimeAll xs (p + 1)
                          where sublist = take p xs
 
 --ex7
---Luhn Algorithm
+--Luhn Algorithm 1h30min
 luhn :: Integer -> Bool
 luhn n = algorithm (intToList n)
 
@@ -147,3 +147,55 @@ isMaster n = (first2 == [5,1] || first2 == [5,2] || first2 == [5,3] || first2 ==
 isVisa :: Integer -> Bool
 isVisa n = (head (reverse listR)) == 4 && (length listR) == 16 && algorithm listR 
            where listR = intToList n 
+
+--as for testing, I can't find a way to involve quickcheck into this process, so I will employ some simple tests on some valid card numbers for each type. Also, I make sure the
+--card number is of only one type
+
+--valid card numbers
+visaNumber=4532920348852300
+masterNumber=5318850055871739
+aExpressNumber=343403032966147
+
+--testing luhn implementation
+testM = (luhn masterNumber) && not (luhn (masterNumber + 1))
+testV = (luhn visaNumber) && not (luhn (visaNumber + 1))
+testAE = (luhn aExpressNumber) && not (luhn (aExpressNumber + 1))
+
+testTypeV = (isVisa visaNumber) && not (isMaster visaNumber) && not (isAmericanExpress visaNumber)
+testTypeM = (isMaster masterNumber) && not (isVisa masterNumber) && not (isAmericanExpress masterNumber)
+testTypeAE = (isAmericanExpress aExpressNumber) && not (isVisa aExpressNumber) && not (isMaster aExpressNumber)
+
+--ex8 - incomplete
+data Boy = Matthew | Peter | Jack | Arnold | Carl
+     deriving (Eq, Show)
+
+boys = [Matthew, Peter, Jack, Arnold, Carl]
+
+data Guilty = T | F | U
+      deriving (Eq, Show)
+
+statementM :: [Guilty]
+statementM = [F, U, U, U, F] 
+statementP = [T, U, T, U, U]
+statementJ = map orG (zip (map notG statementM) (map notG statementP))
+statementA = map orG (zip statementM statementP)
+statementC = map notG statementA
+
+andG :: (Guilty, Guilty) -> Guilty
+andG (a,b) | a == U = b
+           | b == U = a
+           | a == b = a
+           | otherwise = F
+
+notG :: Guilty -> Guilty
+notG a | a == T = F
+       | a == F = T 
+       | a == U = U
+
+orG :: (Guilty, Guilty) -> Guilty
+orG (a,b) | a == U = b
+          | b == U = a
+          | (a == T || b == T) = T
+          | otherwise = F
+
+--encode their statements into arrays of length 5
