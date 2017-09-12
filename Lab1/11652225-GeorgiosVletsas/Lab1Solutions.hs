@@ -115,7 +115,8 @@ checkSum (x:xs)
 {--[ x | x <- l, p x ]	keep elements (matching) - from http://rigaux.org/language-study/syntax-across-languages-per-language/Haskell.html
 
 solution :: Integer -> [Integer] -> Integer
-solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product xs + 1 )) --xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
+solution = ( product xs + 1 | xs <- [take n primes | n <- [2..] ], not (prime (product xs + 1 )) 
+--xs is a list of all primes from primes list from 2 up to n, keep elements resulting from the product of ps+1 that are not prime 
 
 
 --Not working - 1hr 
