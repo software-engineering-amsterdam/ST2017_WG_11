@@ -43,7 +43,7 @@ triangle a b c | (a > b) || (a > c) || (b > c) = error ("Please give lengths in 
                | (a^2) + (b^2) == c^2 = Rectangular
                | otherwise = Other
 
---Ex3. time spent: 90 mins
+--Ex3. time spent: 150 mins
 stronger, weaker :: [a] -> (a -> Bool) -> (a -> Bool) -> Bool
 stronger xs p q = forall xs (\ x -> p x --> q x)
 weaker   xs p q = stronger xs q p 
@@ -65,27 +65,38 @@ myP3 = FunctionPair "p3" p3
 myP4 = FunctionPair "p4" p4
 
 --sortCond :: FunctionPair -> FunctionPair -> Ordering
-sortCond a b | (stronger set (prop a) (prop b)) = GT
-             | (weaker set (prop a) (prop b)) = LT 
+sortCond a b | (stronger set (prop a) (prop b)) = LT
+             | (weaker set (prop a) (prop b)) = GT 
              | otherwise = EQ
              where set = [-10..10]
 
 test = [name x | x<-sortBy sortCond [myP1, myP2, myP3, myP4]]
 
---Ex4. time spent: x mins
+--Ex4. time spent: 45 mins
 quicksrt :: Ord a => [a] -> [a]  
 quicksrt [] = []  
 quicksrt (x:xs) = 
-   quicksrt [ a | a <- xs, a < x ]  
+   quicksrt [ a | a <- xs, a <= x ]  
    ++ [x]
    ++ quicksrt [ a | a <- xs, a > x ]
 
-isPermutation :: (Eq a, Ord a) => [a] -> [a] -> Bool
-isPermutation a b | a == b = True
-                  | otherwise = (quicksrt a) == (quicksrt b)
+isPermutationSrt, isDerangement :: (Eq a, Ord a) => [a] -> [a] -> Bool
+isPermutationSrt a b | a == b = True
+                     | otherwise = (quicksrt a) == (quicksrt b)
 
--- sameLengthProp, onlyNumbersProp :: [a] -> [a] -> Bool
--- sameLengthProp a b = length a == length b
+sameLengthProp :: [a] -> [a] -> Bool
+sameLengthProp a b = length a == length b
 
+index :: (Eq a) => a -> [a] -> Int
+index a (x:xs) | a == x = 1
+               | otherwise = 1 + index a xs
 
-                       
+testMap :: (Eq a) => [a] -> [a] -> Bool
+testMap xs ys = foldl (&&) True (map (\(x,y) -> index x xs /= index x ys) (zip xs ys))
+
+--Ex5 - 30 min
+isDerangement xs ys = (isPermutationSrt xs ys) && (foldl (&&) True (map (\(x,y) -> x /= y) (zip xs ys)))
+--isDerangement xs ys = (isPermutationSrt xs ys) && (foldl (&&) True (map \x -> index x xs /= index x ys) xs))
+
+deran :: Int -> [[Int]]
+deran n = filter (\x -> isDerangement x set) (permutations set) where set = [0..n-1]
