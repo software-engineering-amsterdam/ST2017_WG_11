@@ -80,9 +80,17 @@ quicksrt (x:xs) =
    ++ [x]
    ++ quicksrt [ a | a <- xs, a > x ]
 
-isPermutationSrt, isDerangement :: (Eq a, Ord a) => [a] -> [a] -> Bool
+isPermutation, isPermutationSrt, isDerangement :: (Eq a, Ord a) => [a] -> [a] -> Bool
 isPermutationSrt a b | a == b = True
                      | otherwise = (quicksrt a) == (quicksrt b)
+
+isPermutation [] [] = True
+isPermutation xs (y:ys) | length xs /= length (y:ys) = False
+                        | otherwise = isPermutation (delete y xs) ys
+
+remove :: Eq a => a -> [a] -> [a]
+remove _ [] = []
+remove a xs = filter (/=a) xs
 
 sameLengthProp :: [a] -> [a] -> Bool
 sameLengthProp a b = length a == length b
@@ -100,3 +108,17 @@ isDerangement xs ys = (isPermutationSrt xs ys) && (foldl (&&) True (map (\(x,y) 
 
 deran :: Int -> [[Int]]
 deran n = filter (\x -> isDerangement x set) (permutations set) where set = [0..n-1]
+
+--Ex7 - 30 mins
+ibans = [("AD",24),("AT",20),("BH",22),("BE",16),("BA",20),("BG",22),("HR",21),("CY",28),("GB",22)]
+
+moveToBeginning, replaceWithNumbers :: String -> String
+moveToBeginning str = (drop 4 str) ++ (take 4 str)
+
+replaceWithNumbers "" = ""
+replaceWithNumbers (x:xs) | (x>='A' && x<='Z') = show ((ord x) - 55) ++ replaceWithNumbers xs
+                          | otherwise = x : replaceWithNumbers xs
+
+iban :: String -> Bool
+iban nr = (length nr == countryCodeLength) && (read (replaceWithNumbers (moveToBeginning (filter (/=' ') nr))) :: Integer) `mod` 97 == 1
+    where countryCodeLength = snd (head (filter (\(x,y)-> x == (take 2 nr)) ibans))
