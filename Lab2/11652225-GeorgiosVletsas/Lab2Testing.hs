@@ -13,7 +13,7 @@ p --> q = (not p) || q
 forall :: [a] -> (a -> Bool) -> Bool
 forall = flip all
 
---Exercise 4
+--Exercise 3
 --a)
 
 stronger, weaker :: [a] -> (a -> Bool) -> (a -> Bool) -> Bool
@@ -25,6 +25,7 @@ p1,p2,p3 :: Int -> Bool
 p1 n = even n && n > 3 
 p2 n = even n || n > 3
 p3 n = (even n && n>3) || even n
+p4 n = even n
 
 --functions that test the properties
 f1,f2,f3, f12, f22, f32 :: Int -> Bool
@@ -56,6 +57,62 @@ testProperties = do
    putStrLn "[ even ] compared to [ (even n && n>3) || even n ] for this range."
    print (compar 10 f3 f32)
    
---time so far: 1 hr
+--Time spent: 1 hr
 
 --b)
+
+data FunctionParts a b = FunctionParts {name :: String , prop :: (a->Bool)}
+
+myP1 = FunctionParts " even n AND n > 3 " p1
+myP2 = FunctionParts " even n OR n > 3 " p2
+myP3 = FunctionParts " (even n AND n>3) OR even n " p3
+myP4 = FunctionParts " even " p4
+
+sortConditions x y | (stronger set (prop x) (prop y)) = LT
+                   | (weaker set (prop x) (prop y))  = GT
+                   | otherwise = EQ 
+                   where set = [-10..10]
+
+sortLst = [ name n | n<-sortBy sortConditions [myP1 , myP2 , myP3 , myP4 ]]
+
+--Time spent: 1hr 10 min
+
+
+--Task 4
+
+--a)
+isPermutation :: Eq a => [a] -> [a] -> Bool
+isPermutation [] [] = True
+isPermutation [] xs = False
+isPermutation xs [] = False
+isPermutation xs (y:ys) | length xs /= length (y:ys) = False
+                        | otherwise = isPermutation (delete y xs) ys
+
+
+--Time Spent=40 mins						
+--b)
+
+test1, test2 :: Eq a => [a] -> Bool
+test1 x = isPermutation (reverse x) x --same list reversed
+test2 x = isPermutation x x --same list
+
+test3 :: Ord a => [a] -> Bool
+test3 x = isPermutation x (sort x)
+
+t4x = [1,2,3] 
+t4y = [4,5,2]
+test4 :: Eq a => [a] -> [a] -> Bool
+test4 x y = isPermutation x y
+
+testWithSet :: Int -> ([Int] -> Bool) -> Bool
+testWithSet n testNo = testNo [0..n]
+--not containing duplicates means that lists of length [0..n] are good enough to 
+--prove the correctness.
+
+--Time Spent: 30 mins
+
+
+
+
+
+
