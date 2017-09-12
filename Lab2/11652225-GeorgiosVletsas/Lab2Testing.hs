@@ -112,6 +112,49 @@ testWithSet n testNo = testNo [0..n]
 --Time Spent: 30 mins
 
 
+--Task 5
+
+isDerangement :: Eq a => [a] -> [a] -> Bool
+isDerangement [] [] = True
+isDerangement [] (x:xs) = False
+isDerangement (x:xs) [] = False
+isDerangement (x:xs) (y:ys) | length (x:xs) /= length (y:ys) = False
+                            | x /= y = isDerangement (delete x xs) (delete y ys)
+                            | otherwise = False
+							
+			
+							
+							
+--foldl x [] - applies x between all elements in the list ()
+
+--Time Spent: 30 min (tried to make it work with isPermutation)
+
+--Task6
+{- ROT13 is a Caesar cipher that substitutes the first 13 letters of the latin
+alphabet with the leter that is 13 letters after it. It can be inversed the same way
+It needs to use the English alphabet(26 letters).
+
+Implementation : read character. If it's up to the 13th, do +13. If it is from 13-26 then do -13
+
+-}
+rot13 :: Char -> Char
+rot13 c = if c `elem` "ABCDEFGHIJKLM" || c `elem` "abcdefghijklm"
+          then toEnum (fromEnum c + 13)
+		  else if c `elem` "NOPQRSTUVWXYZ" || c `elem` "nopqrstuvwxyz"
+		  then toEnum (fromEnum c - 13)
+		  else c
+		
+--elem checks if c is an element of the string given		
+--Time spent: 1hr
+
+
+
+
+
+
+
+
+
 
 
 
