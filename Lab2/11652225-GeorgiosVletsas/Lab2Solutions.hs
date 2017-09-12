@@ -4,13 +4,55 @@ import Data.List
 import Data.Char
 import System.Random
 import Test.QuickCheck
+import Data.Char (ord)
 
 infix 1 -->
 
 (-->) :: Bool -> Bool -> Bool
 p --> q = (not p) || q
 
---Exercise 3
+forall :: [a] -> (a -> Bool) -> Bool
+forall = flip all
+
+--Task 1------------------------------------------------------------------------
+
+probs :: Int -> IO [Float]
+probs 0 = return []
+probs n = do
+             p <- getStdRandom random
+             ps <- probs (n-1)
+             return (p:ps)
+
+
+--Create a list with all elements of given range. The length is the number of elements
+testProbs :: Int -> IO [Int]
+testProbs 0 = return [0,0,0,0]
+testProbs n = do
+              list <- probs n
+              let firstQuartile = length (filter (\ x -> x >= 0 && x < 0.25) list)
+              let secondQuartile = length (filter (\ x -> x >= 0.25 && x < 0.50) list)
+              let thirdQuartile = length (filter (\ x -> x >= 0.50 && x < 0.75) list)
+              let fourthQuartile = length (filter (\ x -> x >= 0.75 && x <= 1) list)
+              return [firstQuartile, secondQuartile, thirdQuartile, fourthQuartile]
+
+--Time Spent: 20 minutes
+
+--Task 2------------------------------------------------------------------------
+data Shape = NoTriangle | Equilateral
+           | Isosceles  | Rectangular | Other deriving (Eq,Show)
+
+triangle :: Integer -> Integer -> Integer -> Shape
+triangle x y z | (x+y <=z) = NoTriangle
+               | (x == y && x == z) = Equilateral
+               | (x^2 + y^2 == z^2) = Rectangular
+               | (x == y || y == z || x == z) = Isosceles
+               | otherwise = Other
+
+--Time Spent: 20 minutes
+
+--for testing create a function :: shape -> [[Int]]? Then return true if all the triads give that shape
+
+--Task 3------------------------------------------------------------------------
 --a)
 
 stronger, weaker :: [a] -> (a -> Bool) -> (a -> Bool) -> Bool
@@ -54,7 +96,7 @@ testProperties = do
    putStrLn "[ even ] compared to [ (even n && n>3) || even n ] for this range."
    print (compar 10 f3 f32)
 
---time so far: 1 hr
+--time spent: 1 hr
 
 --b)
 
@@ -76,7 +118,7 @@ sortLst = [ name n | n<-sortBy sortConditions [myP1 , myP2 , myP3 , myP4 ]]
 --Time spent: 1hr 10 min
 
 
---Task 4
+--Task 4------------------------------------------------------------------------
 
 --a)
 isPermutation :: Eq a => [a] -> [a] -> Bool
@@ -109,7 +151,7 @@ testWithSet n testNo = testNo [0..n]
 
 --Time Spent: 30 mins
 
---Task 5
+--Task 5------------------------------------------------------------------------
 
 --a)
 isDerangement :: Eq a => [a] -> [a] -> Bool
@@ -126,7 +168,7 @@ isDerangement (x:xs) (y:ys) | length (x:xs) /= length (y:ys) = False
 
 --Time Spent: 30 min (tried to make it work with isPermutation)
 
---Task6
+--Task6------------------------------------------------------------------------
 {- ROT13 is a Caesar cipher that substitutes the first 13 letters of the latin
 alphabet with the leter that is 13 letters after it. It can be inversed the same way
 It needs to use the English alphabet(26 letters).
@@ -136,14 +178,18 @@ Implementation : read character. If it's up to the 13th, do +13. If it is from 1
 -}
 rot13 :: Char -> Char
 rot13 c = if c `elem` "ABCDEFGHIJKLM" || c `elem` "abcdefghijklm"
-          then toEnum (fromEnum c + 13)
-		  else if c `elem` "NOPQRSTUVWXYZ" || c `elem` "nopqrstuvwxyz"
-		  then toEnum (fromEnum c - 13)
-		  else c
+      then toEnum (fromEnum c + 13)
+      else if c `elem` "NOPQRSTUVWXYZ" || c `elem` "nopqrstuvwxyz"
+      then toEnum (fromEnum c - 13)
+      else c
+
+cipherString :: String -> String
+cipherString xs = map rot13 xs
+--cipherString does ROT13 with whole sentences
 
 --Time spent: 1hr
 
---Task7
+--Task7------------------------------------------------------------------------
 
 iban :: String -> Bool
 iban xs = (read $ ibanCalculation xs) `mod` 97 == 1
