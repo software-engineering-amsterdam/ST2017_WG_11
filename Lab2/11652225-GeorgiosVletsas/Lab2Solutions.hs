@@ -5,7 +5,7 @@ import Data.Char
 import System.Random
 import Test.QuickCheck
 
-infix 1 --> 
+infix 1 -->
 
 (-->) :: Bool -> Bool -> Bool
 p --> q = (not p) || q
@@ -15,11 +15,11 @@ p --> q = (not p) || q
 
 stronger, weaker :: [a] -> (a -> Bool) -> (a -> Bool) -> Bool
 stronger xs p q = forall xs (\ x -> p x --> q x)
-weaker   xs p q = stronger xs q p 
+weaker   xs p q = stronger xs q p
 
 --Defining the properties to test
 p1,p2,p3, p4 :: Int -> Bool
-p1 n = even n && n > 3 
+p1 n = even n && n > 3
 p2 n = even n || n > 3
 p3 n = (even n && n>3) || even n
 p4 n = even n
@@ -35,7 +35,7 @@ f32 n = weaker [-n..n] even (p3)
 
 --comparison of the properties with clear output
 compar :: Int -> (Int -> Bool) -> (Int -> Bool) -> String
-compar n x1 x2 = 
+compar n x1 x2 =
          if strong && weak then "Equivalent"
             else if strong then "Stronger"
             else if weak then "Weaker"
@@ -53,7 +53,7 @@ testProperties = do
    print (compar 10 f2 f22)
    putStrLn "[ even ] compared to [ (even n && n>3) || even n ] for this range."
    print (compar 10 f3 f32)
-   
+
 --time so far: 1 hr
 
 --b)
@@ -68,7 +68,7 @@ myP4 = FunctionParts " even " p4
 
 sortConditions x y | (stronger set (prop x) (prop y)) = LT
                    | (weaker set (prop x) (prop y))  = GT
-                   | otherwise = EQ 
+                   | otherwise = EQ
                    where set = [-10..10]
 
 sortLst = [ name n | n<-sortBy sortConditions [myP1 , myP2 , myP3 , myP4 ]]
@@ -87,7 +87,7 @@ isPermutation xs (y:ys) | length xs /= length (y:ys) = False
                         | otherwise = isPermutation (delete y xs) ys
 
 
---Time Spent=40 mins						
+--Time Spent=40 mins
 --b)
 
 test1, test2 :: Eq a => [a] -> Bool
@@ -97,14 +97,14 @@ test2 x = isPermutation x x --same list
 test3 :: Ord a => [a] -> Bool
 test3 x = isPermutation x (sort x)
 
-t4x = [1,2,3] 
+t4x = [1,2,3]
 t4y = [4,5,2]
 test4 :: Eq a => [a] -> [a] -> Bool
 test4 x y = isPermutation x y
 
 testWithSet :: Int -> ([Int] -> Bool) -> Bool
 testWithSet n testNo = testNo [0..n]
---not containing duplicates means that lists of length [0..n] are good enough to 
+--not containing duplicates means that lists of length [0..n] are good enough to
 --prove the correctness.
 
 --Time Spent: 30 mins
@@ -119,9 +119,9 @@ isDerangement (x:xs) [] = False
 isDerangement (x:xs) (y:ys) | length (x:xs) /= length (y:ys) = False
                             | x /= y = isDerangement (delete x xs) (delete y ys)
                             | otherwise = False
-							
-			
-							
+
+
+
 
 
 --Time Spent: 30 min (tried to make it work with isPermutation)
@@ -140,6 +140,52 @@ rot13 c = if c `elem` "ABCDEFGHIJKLM" || c `elem` "abcdefghijklm"
 		  else if c `elem` "NOPQRSTUVWXYZ" || c `elem` "nopqrstuvwxyz"
 		  then toEnum (fromEnum c - 13)
 		  else c
-		
---elem checks if c is an element of the string given		
+
 --Time spent: 1hr
+
+--Task7
+
+iban :: String -> Bool
+iban xs = (read $ ibanCalculation xs) `mod` 97 == 1
+
+
+swapFirstFour :: String -> String
+swapFirstFour xs = filter (/=' ') ((drop 4 xs) ++ (take 4 xs))
+
+convertElement :: Char -> [Char]
+convertElement c | c `elem` ['0'..'9'] = [c]
+           | toUpper c `elem` ['A'..'Z'] = show (ord (toUpper c) - 55)
+           | otherwise = error "Invalid Input"
+
+ibanNumbers :: String -> [[Char]]
+ibanNumbers xs = map convertElement $ swapFirstFour xs
+
+ibanCalculation :: String -> String
+ibanCalculation xs = concat $ ibanNumbers xs
+--concat turns ["a","b","c"] into "abc"
+
+--Valid ibanNumbers taken from http://www.rbs.co.uk/corporate/international/g0/guide-to-international-business/regulatory-information/iban/iban-example.ashx
+testibanNumbers = ["AL47 2121 1009 0000 0002 3569 8741",
+                   "AZ21 NABZ 0000 0000 1370 1000 1944",
+                   "CY17 0020 0128 0000 0012 0052 7600",
+                   "GR16 0110 1250 0000 0001 2300 695",
+                   "IS14 0159 2600 7654 5510 7303 39",
+                   "NL39 RABO 0300 0652 64",
+                   "MT84 MALT 0110 0001 2345 MTLC AST0 01S",
+                   "MU17 BOMM 0101 1010 3030 0200 000M UR"]
+
+--Random fake iban Numbers. Note that the last one is from the valid list, but is invalid itself
+--this was also checked using https://www.ibancalculator.com/iban_validieren.html
+fakeibanNumbers = ["FAKE 4321 TEST 0923 8288",
+                   "-S2Q EJS= WOAJ 2131 1231",
+                   "NL39 RABO 2910 2993 52",
+                   "GB29 RBOS 6016 1331 9268 19"]
+
+testLegit = all iban testibanNumbers
+--this tests all the iban numbers in testibanNumbers with the iban function. If all are true then it returns true
+
+testFake =  all iban fakeibanNumbers
+--this tests all the fake iban numbers in fakeibanNumbers with the iban function. If one of them is false, it returns False
+
+
+--Time spent: 2hr 30min
