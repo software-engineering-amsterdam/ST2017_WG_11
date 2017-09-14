@@ -65,7 +65,7 @@ triangle a b c =
 
 
 -- Question 3 - Testing properties strength
--- Time spent: 
+-- Time spent: 3h
 
 stronger, weaker :: [a] -> (a -> Bool) -> (a -> Bool) -> Bool
 stronger xs p q = forall xs (\ x -> p x --> q x)
@@ -79,26 +79,100 @@ b x = even x || x > 3
 c x = (even x && x > 3) || even x
 
 q3a, q3b, q3c, q3d :: Bool
-q3a = stronger [1..10] a even
-q3b = stronger [1..10] b even
-q3c = stronger [1..10] c even
-q3d = stronger [1..10] even c
-
+q3a = stronger [(-10)..10] a even
+q3b = stronger [(-10)..10] b even
+q3c = stronger [(-10)..10] c even
+q3d = stronger [(-10)..10] even c
 
 -- Question 3b, descending list of properties
 
+aFn = FunctionName "a" a
+bFn = FunctionName "b" b
+cFn = FunctionName "c" c
+dFn = FunctionName "d" c
 
+data FunctionName a b = FunctionName {
+      fnName :: String,
+      fn :: (a->Bool)
+}
+
+orderProperties p q | (stronger [(-10)..10] a b) = GT
+                    | (weaker [(-10)..10] a b) = LT
+                    | otherwise = EQ
+                    where a = (fn p)
+                          b = (fn q)
+                
+myOrdering = [ (fnName x) | x <- reverse (sortBy orderProperties [aFn, bFn, cFn, dFn])]
+
+-- myOrdering = ["a","c","d","b"]
 
 -- Question 4 - Recognizing Permutations
--- Time spent:
+-- Time spent: 2.5h
 
+isPermutation :: Eq a => [a] -> [a] -> Bool
+isPermutation [] [] = True
+isPermutation [] a  = False
+isPermutation a [] = False   
+isPermutation (x:xs) y = elem x y && isPermutation xs (removeFromList x y)
+
+-- There should be no duplicates in the permutation list, so this function is save to use (it will however remove duplicates from the list, if there are any)
+removeFromList :: Eq a  => a -> [a] -> [a]
+removeFromList _ [] = []
+removeFromList x (y:ys)
+           | x == y    = removeFromList x ys
+           | otherwise = y : removeFromList x ys
+
+--exampleList :: [Int]
+--exampleList = return [1,2,3]
+--
+--examplePermutationList :: [[Int]]
+--examplePermutationList = return [[1,2,3],[2,3,1],[3,2,1]]
+
+-- Testable list
+
+-- Provide an ordered list of properties by strength using the weakear and stronger definition
+
+-- Only numbers
+-- Same length
+-- Must be a list
+
+pNumbers, pSameLength :: [a]->[a]->Bool
+pSameLength a b = length a == length b
+pNumbers a b = True
+
+--
+--pIsList :: [a] -> [a] -> Bool
+--pIsList [Int] [Int] = True
+--pIsList a b = False
+
+
+-- Can you automate the test process? Use the techniques presented in this week's lecture. Also use QuickCheck.
 
 
 -- Question 5 - Recognizing and generating derangements
 -- Time spent:
 
+index :: Eq a => a -> [a] -> Int
+index n (x:xs) | n == x  = 0
+               | otherwise = 1 + index n xs
+
+isDerangement :: Eq a => [a] -> [a] -> Bool
+isDerangement [] [] = True
+isDerangement [] y  = False
+isDerangement y [] = False   
+isDerangement (x:xs) (y:ys) =
+   elem x (y:ys)  && (index x (x:xs) /= index x (y:ys)) && isDerangement xs (removeFromList x (y:ys))
+
+
+deran :: [Int] -> [Int]
+deran [] = []
+deran a = a
+
+
 -- Question 6 - Implementing and testing ROT13 encoding
 -- Time spent:
+
+
 
 -- Question 7 - Implementing and testing IBAN validation
 -- Time spent:
