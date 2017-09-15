@@ -177,9 +177,9 @@ Implementation : read character. If it's up to the 13th, do +13. If it is from 1
 
 -}
 rot13 :: Char -> Char
-rot13 c = if c `elem` "ABCDEFGHIJKLM" || c `elem` "abcdefghijklm"
+rot13 c = if (toUpper c) `elem` ['A'..'M']
       then toEnum (fromEnum c + 13)
-      else if c `elem` "NOPQRSTUVWXYZ" || c `elem` "nopqrstuvwxyz"
+      else if (toUpper c) `elem` ['N'..'Z']
       then toEnum (fromEnum c - 13)
       else c
 
