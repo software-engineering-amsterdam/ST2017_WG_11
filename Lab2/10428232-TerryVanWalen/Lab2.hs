@@ -48,7 +48,7 @@ triangle x y z   | x <= 0
                  | x == y
                    && x == z
                    && y == z                    = Equilateral
-                 | x^2 + y^2 == z^2
+          d       | x^2 + y^2 == z^2
                    || x^2 + z^2 == y^2
                    || y^2 + z^2 == x^2          = Rectangular
                  | x == y
@@ -97,5 +97,102 @@ fp3 = FunctionPair "p3" p3
 fp4 = FunctionPair "p4" p4
 
 
--- descendingStrengthList
--- sortBy stronger plist
+-- Exercise 4 -- Recognizing Permutations -- 60 minutes
+-- Solution based on: http://geekyplatypus.com/generating-permutations-and-derangements-using-haskell/
+-- This is a really fast solution and works even when there are duplicates in the lists.
+isPermutation :: Eq a => [a] -> [a] -> Bool
+isPermutation [] []     = True
+isPermutation xs []     = False
+isPermutation [] xs     = False
+isPermutation (l:l1) l2 | length (l:l1) == length l2 = isPermutation (l1) (delete l l2)
+                        | otherwise = False
+
+-- How would we test this
+-- First is the list a permutation of itself?
+permTestList = [1, 2, 3, 4, 2, 1] :: [Integer]
+perm1, perm2, perm3, perm4 :: [Integer] -> Bool
+perm1 xs = isPermutation xs xs
+
+-- A permutation of the list with one random value added
+-- Should return false, so included  not
+perm2 xs = not (isPermutation xs (xs ++ [2]))
+
+-- A permutation of the list with the same list + the same list
+-- An empty list would result in True while all other lists would result in False
+-- All other lists should return false
+perm3 xs = isPermutation xs (xs ++ xs) --> null xs
+
+-- A permutation of the list with the same list + the same list
+perm4 xs = isPermutation sortedlist (reverse sortedlist)
+           where sortedlist = sort(xs)
+
+
+testPerm1 = quickCheck perm1
+testPerm2 = quickCheck perm2
+testPerm3 = quickCheck perm3
+testPerm4 = quickCheck perm4
+
+
+
+
+-- Exercise 5 -- Derangements -- 60 minutes
+-- test5 = isDerangement seed
+isDerangement :: Eq a => [a] -> [a] -> Bool
+isDerangement [] [] = True
+isDerangement l1 [] = False
+isDerangement [] l2 = False
+isDerangement (x:xs) (y:ys) | x /= y = isDerangement xs ys
+                            | otherwise = False
+
+perms :: [a] -> [[a]]
+perms [] = [[]]
+perms (x:xs) = concat (map (insrt x) (perms xs)) where
+  insrt x [] = [[x]]
+  insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
+
+-- Also got most of this from: http://geekyplatypus.com/generating-permutations-and-derangements-using-haskell/
+-- Good and simple function, would be faster to implement it without the perms function but this makes it a lot easier.
+deran :: Integer -> [[Integer]]
+deran n = filter (\p -> isDerangement p [0..(n-1)]) (perms [0..(n-1)])
+
+
+
+-- Exercise 6 -- 60 minutes
+-- Wanted to do somtehing differnt than using modules.
+alphabet = (init [(chr 0)..'a']) ++ ['a'..'z'] ++ ['a'..'z']
+rot13 :: [Char] -> [Char]
+rot13 [] = ""
+rot13 (x:xs) = take 1 (drop ((ord x) + 13) alphabet) ++ rot13 xs
+
+
+-- Exercise 7 -- start 15.49
+testcases = ["NL39RABO0300065264", "LI21088100002324013AA", "PK36SCBL0000001123456702"]
+iban :: String -> Bool
+iban s = valid s && mod (read (char2digitsString (move4end s)) :: Integer) 97 == 1
+
+valid :: String -> Bool
+valid s = validString s && validNLIBAN s
+
+validString :: String -> Bool
+validString [] = True
+validString (x:xs) = elem x (['A'..'Z'] ++ ['0'..'9']) && validString xs
+
+validNLIBAN :: String -> Bool
+validNLIBAN s = take 2 s == "NL"
+                && validNLLength s
+                && length (filter (\p -> elem p ['0'..'9']) s) >= 10
+
+validNLLength :: String -> Bool
+validNLLength s = length s == 18
+
+move4end :: String -> String
+move4end s = (drop 4 s) ++ first4 where first4 = take 4 s
+
+char2digitsString :: [Char] -> [Char]
+char2digitsString [] = ""
+char2digitsString (x:xs) | ord x < ord 'A' = x : char2digitsString xs
+                         | otherwise       = show (ord x - ord 'A' + 10) ++ char2digitsString xs
+-- char2digitsString :: [Char] -> [Char]
+-- char2digitsString [] = ""
+-- char2digitsString (x:xs) | ord x < ord 'A' = x ++ char2digitsString xs
+--                          | otherwise       = x ++ char2digitsString xs
