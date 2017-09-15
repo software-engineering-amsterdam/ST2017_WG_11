@@ -50,7 +50,10 @@ triangle x y z | (x+y <=z) = NoTriangle
 
 --Time Spent: 20 minutes
 
---for testing create a function :: shape -> [[Int]]? Then return true if all the triads give that shape
+testFunction :: Shape -> [[Integer]]
+testFunction shape = [[x,y,z] | x <- [1..5], y <- [1..5], z <- [1..5], triangle x y z == shape ]
+
+--Returns all triads in the range 1..5 that have the shape given in the function.
 
 --Task 3------------------------------------------------------------------------
 --a)
