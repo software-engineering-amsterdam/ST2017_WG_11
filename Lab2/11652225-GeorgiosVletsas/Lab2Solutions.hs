@@ -54,6 +54,7 @@ testFunction :: Shape -> [[Integer]]
 testFunction shape = [[x,y,z] | x <- [1..5], y <- [1..5], z <- [1..5], triangle x y z == shape ]
 
 --Returns all triads in the range 1..5 that have the shape given in the function.
+--Time spent: 30 minutes
 
 --Task 3------------------------------------------------------------------------
 --a)
