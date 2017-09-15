@@ -80,13 +80,9 @@ quicksrt (x:xs) =
    ++ [x]
    ++ quicksrt [ a | a <- xs, a > x ]
 
-isPermutation, isPermutationSrt, isDerangement :: (Eq a, Ord a) => [a] -> [a] -> Bool
-isPermutationSrt a b | a == b = True
+isPermutation, isDerangement :: (Eq a, Ord a) => [a] -> [a] -> Bool
+isPermutation a b | a == b = True
                      | otherwise = (quicksrt a) == (quicksrt b)
-
-isPermutation [] [] = True
-isPermutation xs (y:ys) | length xs /= length (y:ys) = False
-                        | otherwise = isPermutation (delete y xs) ys
 
 remove :: Eq a => a -> [a] -> [a]
 remove _ [] = []
@@ -94,6 +90,13 @@ remove a xs = filter (/=a) xs
 
 sameLengthProp :: [a] -> [a] -> Bool
 sameLengthProp a b = length a == length b
+
+propA :: Ord a => [a] -> [a] -> Bool
+propA a b = isPermutation a b == isPermutation b a
+
+propB :: Ord a => [a] -> [a] -> [a] -> Bool
+propB a b c | (isPermutation a b) && (isPermutation b c) = (isPermutation a c) == True
+            | otherwise = False
 
 index :: (Eq a) => a -> [a] -> Int
 index a (x:xs) | a == x = 1
@@ -103,11 +106,18 @@ testMap :: (Eq a) => [a] -> [a] -> Bool
 testMap xs ys = foldl (&&) True (map (\(x,y) -> index x xs /= index x ys) (zip xs ys))
 
 --Ex5 - 30 min
-isDerangement xs ys = (isPermutationSrt xs ys) && (foldl (&&) True (map (\(x,y) -> x /= y) (zip xs ys)))
+isDerangement xs ys = (isPermutation xs ys) && (foldl (&&) True (map (\(x,y) -> x /= y) (zip xs ys)))
 --isDerangement xs ys = (isPermutationSrt xs ys) && (foldl (&&) True (map \x -> index x xs /= index x ys) xs))
 
 deran :: Int -> [[Int]]
 deran n = filter (\x -> isDerangement x set) (permutations set) where set = [0..n-1]
+
+--Ex6 - 30 min
+rot13 :: String -> String
+rot13 a = map (\x->if (elem x (['a'..'z']++['A'..'Z'])) then (rot13L x) else x) a
+
+rot13L a = chr ((((ord a) - limit) + 13) `mod` 26 + limit)
+                      where limit = if (a >= 'A' && a <= 'Z') then 65 else 97
 
 --Ex7 - 30 mins
 ibans = [("AD",24),("AT",20),("BH",22),("BE",16),("BA",20),("BG",22),("HR",21),("CY",28),("GB",22)]
