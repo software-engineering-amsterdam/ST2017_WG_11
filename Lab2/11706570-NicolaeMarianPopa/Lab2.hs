@@ -120,7 +120,7 @@ rot13L a = chr ((((ord a) - limit) + 13) `mod` 26 + limit)
                       where limit = if (a >= 'A' && a <= 'Z') then 65 else 97
 
 --Ex7 - 30 mins
-ibans = [("AD",24),("AT",20),("BH",22),("BE",16),("BA",20),("BG",22),("HR",21),("CY",28),("GB",22)]
+ibans = [("AD",24),("AT",20),("BH",22),("BE",16),("BA",20),("BG",22),("HR",21),("CY",28),("GB",22),("AL",28)]
 
 moveToBeginning, replaceWithNumbers :: String -> String
 moveToBeginning str = (drop 4 str) ++ (take 4 str)
@@ -130,5 +130,6 @@ replaceWithNumbers (x:xs) | (x>='A' && x<='Z') = show ((ord x) - 55) ++ replaceW
                           | otherwise = x : replaceWithNumbers xs
 
 iban :: String -> Bool
-iban nr = (length nr == countryCodeLength) && (read (replaceWithNumbers (moveToBeginning (filter (/=' ') nr))) :: Integer) `mod` 97 == 1
+iban nr = (length code == countryCodeLength) && (read (replaceWithNumbers (moveToBeginning code)) :: Integer) `mod` 97 == 1
     where countryCodeLength = snd (head (filter (\(x,y)-> x == (take 2 nr)) ibans))
+          code = filter (/=' ') nr
