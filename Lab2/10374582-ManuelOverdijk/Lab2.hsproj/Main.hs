@@ -14,6 +14,14 @@ p --> q = (not p) || q
 forall :: [a] -> (a -> Bool) -> Bool
 forall = flip all
 
+
+perms :: [a] ->[[a]]
+perms [] = [[]]
+perms (x:xs) = concat (map (insrt x) (perms xs)) where
+insrt x [] = [[x]]
+insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
+
+
 probs :: Int -> IO [Float]
 probs 0 = return []
 probs n = do
@@ -130,7 +138,7 @@ removeFromList x (y:ys)
 
 -- Testable list
 
--- Provide an ordered list of properties by strength using the weakear and stronger definition
+-- Provide an ordered list of properties by strength using the weaker and stronger definition
 
 -- Only numbers
 -- Same length
@@ -150,7 +158,7 @@ pNumbers a b = True
 
 
 -- Question 5 - Recognizing and generating derangements
--- Time spent:
+-- Time spent: 2h
 
 index :: Eq a => a -> [a] -> Int
 index n (x:xs) | n == x  = 0
@@ -160,24 +168,53 @@ isDerangement :: Eq a => [a] -> [a] -> Bool
 isDerangement [] [] = True
 isDerangement [] y  = False
 isDerangement y [] = False   
-isDerangement (x:xs) (y:ys) =
-   elem x (y:ys)  && (index x (x:xs) /= index x (y:ys)) && isDerangement xs (removeFromList x (y:ys))
+isDerangement (x:xs) (y:ys) = x /= y && isDerangement xs ys
+
+deran :: Int -> [[Int]]
+deran a = filter (\x -> isDerangement x y) (perms y) where y = [1..(a-1)]
 
 
-deran :: [Int] -> [Int]
-deran [] = []
-deran a = a
-
+-- Testable properties
+-- pSamelLength
 
 -- Question 6 - Implementing and testing ROT13 encoding
 -- Time spent:
 
 
+-- ROT13 Specification
+-- ROT13 is a letter substitution cipher which replaces a letter with the 13nth letter in the alphabet after the letter. Due to the alphabet having 26 letters, ROT13 can be applied again to decipher it.
+
+-- ROT13 Implementation
+
+rot13 :: String -> String
+rot13 "" = ""
+rot13 string = [ doCipher x | x <- string]
+
+doCipher :: Char -> Char
+doCipher s | (enumChar+13) > lastChar = toEnum(enumChar-13)
+       | otherwise = toEnum(enumChar+13)
+    where enumChar = fromEnum s
+          lastChar = fromEnum 'z'
+          firstChar = fromEnum 'a'
+          
+-- QuickCheck testable properties
+
 
 -- Question 7 - Implementing and testing IBAN validation
 -- Time spent:
 
+iban :: String -> Bool
+iban [] = False
+iban x = map 
 
+--ibanCipher :: [Int] -> Bool
+--iban (y1:y2:y3:y4:xs) = doIbanCipher (xs:y1:y2:y3:y4)
+
+
+replaceNumbers
+
+
+-- Test report
 
 
 
