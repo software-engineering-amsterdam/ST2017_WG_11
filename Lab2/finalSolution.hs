@@ -178,7 +178,8 @@ propDeranPerm :: Ord a => [a] -> [a] -> Bool
 propDeranPerm a b = isDerangement a b --> isPermutation a b
 
 -- Only the empty list is a derangement of itself
-propDeranRefl :: Ord a => [a] -> [b] -> Bool
+-- gave it another test just to test the property
+propDeranRefl :: Ord a => [a] -> [a] -> Bool
 propDeranRefl a b = isDerangement a a --> null a
 
 propDeranSym :: Ord a => [a] -> [a] -> Bool
@@ -196,10 +197,10 @@ stronger2, weaker2 :: [[a]] -> ([a] -> [a] -> Bool) -> ([a] -> [a] -> Bool) -> B
 stronger2 xs p q = forall xs (\y -> forall xs (\ x -> p x y --> q x y))
 weaker2   xs p q = stronger2 xs q p
 
-adFn = FdName "a" propDeranLength
-bdFn = FdName "b" propDeranPerm
-cdFn = FdName "c" propDeranRefl
-ddFn = FdName "d" propDeranSym
+adFn = FdName "propDeranLength" propDeranLength
+bdFn = FdName "propDeranPerm" propDeranPerm
+cdFn = FdName "propDeranRefl" propDeranRefl
+ddFn = FdName "propDeranSym" propDeranSym
 
 data FdName a b = FdName {
       fndName :: String,
