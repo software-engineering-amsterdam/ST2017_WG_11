@@ -178,14 +178,42 @@ propDeranPerm :: Ord a => [a] -> [a] -> Bool
 propDeranPerm a b = isDerangement a b --> isPermutation a b
 
 -- Only the empty list is a derangement of itself
-propDeranRefl :: Ord a => [a] -> Bool
-propDeranRefl a = isDerangement a a --> null a
+propDeranRefl :: Ord a => [a] -> [b] -> Bool
+propDeranRefl a b = isDerangement a a --> null a
 
 propDeranSym :: Ord a => [a] -> [a] -> Bool
 propDeranSym a b = isDerangement a b == isDerangement b a
 
 propDeranTrans :: Ord a => [a] -> [a] -> [a] -> Bool
 propDeranTrans a b c = ((isDerangement a b) && (isDerangement b c)) --> (isDerangement a c)
+
+deranP :: Int -> [[Int]]
+deranP 0 = []
+deranP n = deranP (n-1) ++ permutations [0..n-1]
+
+
+stronger2, weaker2 :: [[a]] -> ([a] -> [a] -> Bool) -> ([a] -> [a] -> Bool) -> Bool
+stronger2 xs p q = forall xs (\y -> forall xs (\ x -> p x y --> q x y))
+weaker2   xs p q = stronger2 xs q p
+
+adFn = FdName "a" propDeranLength
+bdFn = FdName "b" propDeranPerm
+cdFn = FdName "c" propDeranRefl
+ddFn = FdName "d" propDeranSym
+
+data FdName a b = FdName {
+      fndName :: String,
+      fnd :: ([a]->[a]->Bool)
+}
+
+orderDerangementProperties p q | (stronger2 l a b) = GT
+                              | (weaker2 l a b) = LT
+                              | otherwise = EQ
+                              where a = (fnd p)
+                                    b = (fnd q)
+                                    l = deranP 4
+
+myDerangementOrdering = [ (fndName x) | x <- reverse (sortBy orderDerangementProperties [adFn, bdFn, cdFn, ddFn])]
 
 
 -- Exercise 6
@@ -264,4 +292,3 @@ testLegit = all iban testibanNumbers
 
 testFake =  all iban fakeibanNumbers
 --this tests all the fake iban numbers in fakeibanNumbers with the iban function. If one of them is false, it returns False
-
