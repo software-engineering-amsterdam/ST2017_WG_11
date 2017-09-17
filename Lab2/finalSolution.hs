@@ -211,14 +211,11 @@ cipherString xs = map rot13 xs
 cipherIsInversable s = cipherString (cipherString s) == s
 -- quickCheck(cipherIsInversable) -> +++ OK, passed 100 tests.
 
+cipherOnlyAlphabetEncoding s = cipherString sOnlyNonAlphabet == sOnlyNonAlphabet
+  where sOnlyNonAlphabet = filter (\s -> not $ elem s alphabet) s
+        alphabet = ['a'..'z'] ++ ['A'..'Z']
+-- quickCheck(cipherOnlyAlphabetEncoding) ->  +++ OK, passed 100 tests.
 
-
-
---prop_onlyAlphabet str =
-
--- prop inverse is the same
--- prop only works on the alpabet
--- does not work on non-alphabet
 
 -- Exercise 7
 
