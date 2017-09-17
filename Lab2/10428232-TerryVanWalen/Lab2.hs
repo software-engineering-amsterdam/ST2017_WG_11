@@ -12,6 +12,7 @@ p --> q = (not p) || q
 forall :: [a] -> (a -> Bool) -> Bool
 forall = flip all
 
+
 -- Exercise 1 : 45 minutes
 -- Tested with 1.000.000 and the proportions are as expected.
 probs :: Int -> IO [Float]
@@ -48,7 +49,7 @@ triangle x y z   | x <= 0
                  | x == y
                    && x == z
                    && y == z                    = Equilateral
-          d       | x^2 + y^2 == z^2
+                  | x^2 + y^2 == z^2
                    || x^2 + z^2 == y^2
                    || y^2 + z^2 == x^2          = Rectangular
                  | x == y
@@ -56,6 +57,13 @@ triangle x y z   | x <= 0
                    || y == z                    = Isosceles
                  | otherwise                    = Other
 
+
+ -- propTriangleSym :: Ord a => Integer -> Integer -> Integer -> Bool
+ -- propSym a b c = triangle a b c == triangle c b a
+ --              && triangle a b c == triangle b c a
+ --
+ -- propTriangleTrans :: Ord a => [a] -> [a] -> [a] -> Bool
+ -- propTrans a b c = ((triangle a b) && (triangle b c)) --> (triangle a c)
 
 
 -- Exercise 3 : 4 hours
@@ -107,42 +115,37 @@ isPermutation [] xs     = False
 isPermutation (l:l1) l2 | length (l:l1) == length l2 = isPermutation (l1) (delete l l2)
                         | otherwise = False
 
--- How would we test this
--- First is the list a permutation of itself?
-permTestList = [1, 2, 3, 4, 2, 1] :: [Integer]
-perm1, perm2, perm3, perm4 :: [Integer] -> Bool
-perm1 xs = isPermutation xs xs
 
--- A permutation of the list with one random value added
--- Should return false, so included  not
-perm2 xs = not (isPermutation xs (xs ++ [2]))
+propLength :: Ord a => [a] -> [a] -> Bool
+propLength a b = isPermutation a b --> length a == length b
 
--- A permutation of the list with the same list + the same list
--- An empty list would result in True while all other lists would result in False
--- All other lists should return false
-perm3 xs = isPermutation xs (xs ++ xs) --> null xs
+propRefl :: Ord a => [a] -> Bool
+propRefl a = isPermutation a a --> null a
 
--- A permutation of the list with the same list + the same list
-perm4 xs = isPermutation sortedlist (reverse sortedlist)
-           where sortedlist = sort(xs)
+propSym :: Ord a => [a] -> [a] -> Bool
+propSym a b = isPermutation a b == isPermutation b a
 
-
-testPerm1 = quickCheck perm1
-testPerm2 = quickCheck perm2
-testPerm3 = quickCheck perm3
-testPerm4 = quickCheck perm4
-
+propTrans :: Ord a => [a] -> [a] -> [a] -> Bool
+propTrans a b c = ((isPermutation a b) && (isPermutation b c)) --> (isPermutation a c)
 
 
 
 -- Exercise 5 -- Derangements -- 60 minutes
 -- test5 = isDerangement seed
+isAllDifferent :: Eq a => [a] -> [a] -> Bool
+isAllDifferent [] [] = True
+isAllDifferent l1 [] = False
+isAllDifferent [] l2 = False
+isAllDifferent (x:xs) (y:ys) | x /= y = isAllDifferent xs ys
+                             | otherwise = False
+
 isDerangement :: Eq a => [a] -> [a] -> Bool
 isDerangement [] [] = True
 isDerangement l1 [] = False
 isDerangement [] l2 = False
-isDerangement (x:xs) (y:ys) | x /= y = isDerangement xs ys
-                            | otherwise = False
+isDerangement xs ys | isPermutation xs ys = isAllDifferent xs ys
+                    | otherwise = False
+
 
 perms :: [a] -> [[a]]
 perms [] = [[]]
@@ -156,16 +159,34 @@ deran :: Integer -> [[Integer]]
 deran n = filter (\p -> isDerangement p [0..(n-1)]) (perms [0..(n-1)])
 
 
+propDeranLength :: Ord a => [a] -> [a] -> Bool
+propDeranLength a b = isDerangement a b --> length a == length b
+
+propDeranPerm :: Ord a => [a] -> [a] -> Bool
+propDeranPerm a b = isDerangement a b --> isPermutation a b
+
+-- Only the empty list is a derangement of itself
+propDeranRefl :: Ord a => [a] -> Bool
+propDeranRefl a = isDerangement a a --> null a
+
+propDeranSym :: Ord a => [a] -> [a] -> Bool
+propDeranSym a b = isDerangement a b == isDerangement b a
+
+propDeranTrans :: Ord a => [a] -> [a] -> [a] -> Bool
+propDeranTrans a b c = ((isDerangement a b) && (isDerangement b c)) --> (isDerangement a c)
+
+
+
 
 -- Exercise 6 -- 60 minutes
--- Wanted to do somtehing differnt than using modules.
+-- Wanted to do somtehing differnt than using modulus.
 alphabet = (init [(chr 0)..'a']) ++ ['a'..'z'] ++ ['a'..'z']
 rot13 :: [Char] -> [Char]
 rot13 [] = ""
 rot13 (x:xs) = take 1 (drop ((ord x) + 13) alphabet) ++ rot13 xs
 
 
--- Exercise 7 -- start 15.49
+-- Exercise 7 -- 2 hours
 testcases = ["NL39RABO0300065264", "LI21088100002324013AA", "PK36SCBL0000001123456702"]
 iban :: String -> Bool
 iban s = valid s && mod (read (char2digitsString (move4end s)) :: Integer) 97 == 1
@@ -192,7 +213,5 @@ char2digitsString :: [Char] -> [Char]
 char2digitsString [] = ""
 char2digitsString (x:xs) | ord x < ord 'A' = x : char2digitsString xs
                          | otherwise       = show (ord x - ord 'A' + 10) ++ char2digitsString xs
--- char2digitsString :: [Char] -> [Char]
--- char2digitsString [] = ""
--- char2digitsString (x:xs) | ord x < ord 'A' = x ++ char2digitsString xs
---                          | otherwise       = x ++ char2digitsString xs
+
+testIbans = filter iban testcases
