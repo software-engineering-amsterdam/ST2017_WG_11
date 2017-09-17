@@ -128,7 +128,6 @@ myOrdering = [ (fnName x) | x <- reverse (sortBy orderProperties [aFn, bFn, cFn,
 -- myOrdering = ["a","c","d","b"]
 
 -- Exercise 4
-
 quicksrt :: Ord a => [a] -> [a]
 quicksrt [] = []
 quicksrt (x:xs) =
@@ -140,26 +139,24 @@ isPermutation, isDerangement :: (Eq a, Ord a) => [a] -> [a] -> Bool
 isPermutation a b | a == b = True
                      | otherwise = (quicksrt a) == (quicksrt b)
 
-remove :: Eq a => a -> [a] -> [a]
-remove _ [] = []
-remove a xs = filter (/=a) xs
+--same length
+propLength :: [a] -> [a] -> Bool
+propLength a b = length a == length b
 
-sameLengthProp :: [a] -> [a] -> Bool
-sameLengthProp a b = length a == length b
+--associativity
+propAssoc :: Ord a => [a] -> [a] -> Bool
+propAssoc a b = isPermutation a b == isPermutation b a
 
-propA :: Ord a => [a] -> [a] -> Bool
-propA a b = isPermutation a b == isPermutation b a
+--transitivity
+propTrans :: Ord a => [a] -> [a] -> [a] -> Bool
+-- propTrans a b c | (isPermutation a b) && (isPermutation b c) = (isPermutation a c) /= False
+--             | otherwise = True
+propTrans a b c | (isPermutation a b) && (isPermutation b c) && (not (isPermutation a c)) = False
+            | otherwise = True
 
-propB :: Ord a => [a] -> [a] -> [a] -> Bool
-propB a b c | (isPermutation a b) && (isPermutation b c) = (isPermutation a c) == True
-            | otherwise = False
-
-index :: (Eq a) => a -> [a] -> Int
-index a (x:xs) | a == x = 1
-               | otherwise = 1 + index a xs
-
-testMap :: (Eq a) => [a] -> [a] -> Bool
-testMap xs ys = foldl (&&) True (map (\(x,y) -> index x xs /= index x ys) (zip xs ys))
+--is propLength stronger than propAssoc?
+--out of the three properties, only two have the same parameters, so only them can be compared
+testPermStronger = stronger2 (deranP 4) propLength propAssoc
 
 -- Testing TODO
 
