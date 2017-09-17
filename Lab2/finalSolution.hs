@@ -9,6 +9,11 @@ Nicolae Marian Popa (11706570)
 Final Solution for Exercises 1 - 7
 
 --}
+module Lab2 where
+import Data.List
+import Data.Char
+import System.Random
+import Test.QuickCheck
 
 
 infix 1 -->
@@ -201,7 +206,21 @@ rot13 c = if (toUpper c) `elem` ['A'..'M']
 cipherString :: String -> String
 cipherString xs = map rot13 xs
 
--- QuickCheck testable properties TODO
+-- QuickCheck testable properties
+
+cipherIsInversable s = cipherString (cipherString s) == s
+-- quickCheck(cipherIsInversable) -> +++ OK, passed 100 tests.
+
+
+
+
+--prop_onlyAlphabet str =
+
+-- prop inverse is the same
+-- prop only works on the alpabet
+-- does not work on non-alphabet
+
+-- Exercise 7
 
 ibans = [("AD",24),("AT",20),("BH",22),("BE",16),("BA",20),("BG",22),("HR",21),("CY",28),("GB",22),("AL",28),("AZ",28),("GR",27),("IS",26),("NL",18),("MT",31),("MU",30)]
 
@@ -246,7 +265,3 @@ testLegit = all iban testibanNumbers
 testFake =  all iban fakeibanNumbers
 --this tests all the fake iban numbers in fakeibanNumbers with the iban function. If one of them is false, it returns False
 
-
-
-
--- Exercise 7
