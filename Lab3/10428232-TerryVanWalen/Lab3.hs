@@ -148,7 +148,12 @@ getRandomForm 4 s = do
                       return (Equiv f1 f2)
 
 
-showVal :: IO ()
-showVal = do
-  f <- genRandomForm :: IO Form
-  putStrLn ("Your random form is: "++ show f)
+-- to test if the generated cnf is valid we have to test if it's still equivalent to the original formula.
+loop :: Int -> IO ()
+loop 0 = do return ()
+loop n = do
+  f <- genRandomForm
+  let t = equiv f (form2cnf f)
+  if t then putStrLn ("It works for: "++ show f)
+    else putStrLn ("It doens't work for: "++ show f)
+  loop (n-1)
