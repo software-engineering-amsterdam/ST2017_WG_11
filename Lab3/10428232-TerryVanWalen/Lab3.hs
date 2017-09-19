@@ -99,7 +99,8 @@ dbcv a (Cnj (b:bs)) = Cnj [Dsj [a, b], dbcv a (Cnj bs)]
 dbcv a b            = Dsj [a, b]
 
 
--- Exercise 4 - 14.15
+-- Exercise 4 - 2.5 hours
+-- Random number generations from: https://stackoverflow.com/questions/22526629/am-i-using-randomrio-wrong
 getRandomInt :: Int -> IO Int
 getRandomInt n = randomRIO (1,n) :: IO Int
 
