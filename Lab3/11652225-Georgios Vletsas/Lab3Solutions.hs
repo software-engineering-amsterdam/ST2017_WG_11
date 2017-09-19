@@ -92,36 +92,32 @@ getRandomInt n = getStdRandom (randomR (0,n))
 getRandomForm :: Int -> IO Form
 getRandomForm 0 = do x <- getRandomInt 10
                      return (Prop (x+1))
-					 
-getRandomForm d = do n <- getRandomInt 3
-                     case n of
-                       0 -> do x <- getRandomInt 10
-                               return (Prop (x+1))
+ 
+getRandomForm d = do x <- getRandomInt 10
+                     case d of
+                       0 -> return (Prop (x+1))
                        1 -> do f <- getRandomForm (0)
                                return (Neg f)
-                       2 -> do x <- getRandomInt 10
-                               f <- genRandomCD x
+                       2 -> do f <- genRandomCD x
                                return (Cnj f)
-                       3 -> do x <- getRandomInt 10
-                               f <- genRandomCD x
+                       3 -> do f <- genRandomCD x
                                return (Dsj f)
 
 genRandomCD :: Int -> IO [Form]
 genRandomCD n = do x <- getRandomInt 10
-                   g <- Prop (x+1)
-                   gs <- Prop (x+n)
-                   return (g:gs)
-							   
-			
-{-			
-main :: Int -> IO [Form]
-main x = do d <- getRandomInt 3
-            formLength <- getRandomInt 20
-            getRandomForm d
--}
+                   let g = Prop (x+1)
+                   let gs = Prop (x-n)
+                   return [g,gs]
 
 
---So far 2 hours
+
+main :: IO Form
+main = do d <- getRandomInt 3
+          getRandomForm d
+
+
+
+--So far 2 hours 30 mins
 
 
 
