@@ -1,8 +1,8 @@
 {--
 Lab 2
-Terry van Walen (11652225)
+Terry van Walen (10428232)
 Manuel Overdijk (10374582)
-Georgios Vletsas (10428232)
+Georgios Vletsas (11652225)
 Nicolae Marian Popa (11706570)
 
 
@@ -39,7 +39,8 @@ probs n = do
   return (p:ps)
 
 
--- Exercise 1
+
+-- Exercise 1 -- Time Spent: 2hr 20min (total man hours)
 
 testProbs :: Int -> IO [Int]
 testProbs 0 = return [0,0,0,0]
@@ -59,7 +60,9 @@ testProbs n = do
 -- [2545,2455,2497,2503]
 -- The result show that the implementation is correct.
 
--- Exercise 2
+
+
+-- Exercise 2 -- Time Spent: 3hr (total man hours)
 
 
 data Shape = NoTriangle | Equilateral
@@ -84,7 +87,8 @@ testFunction shape = [[x,y,z] | x <- [1..5], y <- [1..5], z <- [1..5], triangle 
 --Returns all triads in the range 1..5 that have the shape given in the function.
 
 
--- Exercise 3
+
+-- Exercise 3 -- Time Spent: 11hr 50min (total man hours)
 
 
 stronger, weaker :: [a] -> (a -> Bool) -> (a -> Bool) -> Bool
@@ -127,7 +131,9 @@ myOrdering = [ (fnName x) | x <- reverse (sortBy orderProperties [aFn, bFn, cFn,
 
 -- myOrdering = ["a","c","d","b"]
 
--- Exercise 4
+
+
+-- Exercise 4 -- Time Spent: 6hr 40min (total man hours)
 quicksrt :: Ord a => [a] -> [a]
 quicksrt [] = []
 quicksrt (x:xs) =
@@ -158,10 +164,10 @@ propTrans a b c | (isPermutation a b) && (isPermutation b c) && (not (isPermutat
 --out of the three properties, only two have the same parameters, so only them can be compared
 testPermStronger = stronger2 (deranP 4) propLength propAssoc
 
--- Testing TODO
 
 
---Exercise 5
+
+--Exercise 5 -- Time Spent: 4hr 15min (total man hours)
 isDerangement xs ys = (isPermutation xs ys) && (foldl (&&) True (map (\(x,y) -> x /= y) (zip xs ys)))
 
 deran :: Int -> [[Int]]
@@ -214,7 +220,7 @@ orderDerangementProperties p q | (stronger2 l a b) = GT
 myDerangementOrdering = [ (fndName x) | x <- reverse (sortBy orderDerangementProperties [adFn, bdFn, cdFn, ddFn])]
 
 
--- Exercise 6
+-- Exercise 6 -- Time Spent: 2hr 45min (total man hours)
 
 {- ROT13 is a Caesar cipher that substitutes the first 13 letters of the latin
 alphabet with the leter that is 13 letters after it. It can be inversed the same way
@@ -243,7 +249,7 @@ cipherOnlyAlphabetEncoding s = cipherString sOnlyNonAlphabet == sOnlyNonAlphabet
 -- quickCheck(cipherOnlyAlphabetEncoding) ->  +++ OK, passed 100 tests.
 
 
--- Exercise 7
+-- Exercise 7 -- Time Spent: 5hr 15min (total man hours)
 
 ibans = [("AD",24),("AT",20),("BH",22),("BE",16),("BA",20),("BG",22),("HR",21),("CY",28),("GB",22),("AL",28),("AZ",28),("GR",27),("IS",26),("NL",18),("MT",31),("MU",30)]
 
