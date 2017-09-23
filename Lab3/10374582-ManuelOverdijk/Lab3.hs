@@ -35,10 +35,45 @@ testParse :: String -> Bool
 testParse f1 = show (head $ parse f1) == f1
 
 -- Question 3
--- Time spent:
-
-convertToCNF :: Form -> Form
+-- Time spent: 4.5h
 
 -- (1) Convert Impl to (not A v B)
 -- (2) Push negations down to Atoms (possibly: convert double negations to atoms)
 -- (3) Use distribution to convert to CNF
+
+convertToCNF :: Form -> Form
+convertToCNF f = applyIterate(nnf(arrowfree(f)))
+
+applyIterate :: Form -> Form
+applyIterate (Prop a) = Prop a
+applyIterate (Neg a) = Neg a
+applyIterate (Cnj list) = Cnj (map applyIterate list)
+applyIterate (Dsj []) = Dsj []
+applyIterate (Dsj [x]) = applyIterate x -- Disjuction of one property is the property itself
+applyIterate (Dsj (x:xs)) = applyDistribution (applyIterate x) (applyIterate (Dsj xs))
+
+a = Prop 1
+b = Prop 2
+c = Prop 3
+
+formX = Dsj [Neg (a), Neg (b)]
+formX' = Dsj [a, b]
+formY = a
+
+-- Apply Distribution rules
+applyDistribution :: Form -> Form -> Form
+applyDistribution (Cnj [f1]) f2 = applyDistribution f1 f2
+applyDistribution (Cnj (x:xs)) f2 = Cnj [applyDistribution x f2, applyDistribution (Cnj xs) f2]
+applyDistribution f1 (Cnj [f2]) = applyDistribution f1 f2
+applyDistribution f1 (Cnj (x:xs)) = Cnj [applyDistribution f1 x, applyDistribution f1 (Cnj xs)]
+applyDistribution f1 f2 = Dsj [f1,f2] -- a,b -> prop already in CNF
+
+-- form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
+-- form2 = Equiv (Impl p q) (Impl (Neg p) (Neg q))
+-- form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
+
+form5 = Equiv (Neg (Cnj [p,q])) (Dsj [(Neg p),(Neg q)])
+form6 = Dsj[Cnj[p,q],Cnj[p,(Neg q)]]
+test = Neg (Dsj [p,q])
+
+-- Question 4
