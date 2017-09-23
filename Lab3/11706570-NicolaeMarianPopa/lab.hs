@@ -21,7 +21,7 @@ equiv a b = (entails a b) && (entails b a)
 
 --For checking the function we thought of taking the exercises from the workshop and devise individual 
 --tests for each of them. One of us wrote the expressions in a Form form, while another made use of the
---supplied parser.
+--supplied parser. I used the parser.
 --Time spent: 1h 30min
 testE1 = "+(1 -2)"
 testP1 = (not $ tautology expr) && (satisfiable expr) && (not $ contradiction expr) where expr = head $ parse testE1
@@ -56,7 +56,7 @@ testF1 = Impl p (Dsj [p, q]) -- tests testE4 expression
 testS1 = "(1==>+(1 2))"
 testF2 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r) --tests form3 expression
 testS2 = "(*((1==>2) (2==>3))==>(1==>3))"
-test1stCase = foldl (&&) True [(show testF1) == testS1, (show testF2) == testS2]
+test1stCase = all (==True) [(show testF1) == testS1, (show testF2) == testS2]
 
 --ex3, time spent: 3h15min
 form2cnf :: Form -> Form
