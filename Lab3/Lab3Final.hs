@@ -5,11 +5,8 @@ import System.Random
 import Test.QuickCheck
 import Lecture3
 
---Todo: add time spent
---comments
---structure code (task4 mainly)
 
---Task 1-------------------------------------
+--Task 1-- Time spent (total man hours): 7 hours
 contradiction :: Form -> Bool
 contradiction f = all (\ v -> not(evl v f)) (allVals f)
 
@@ -32,7 +29,7 @@ entailTwo = Impl p r
 equivOne = Dsj[p,q]
 equivTwo = Dsj[q,p]
 
--- We know that a tautology is also satisviable
+-- We know that a tautology is also satisfiable
 -- We know that a contradiction can't be satisfiable and thus not a tautology
 --
 
@@ -74,15 +71,22 @@ taskOneTest = do
      print (equiv equivOne equivTwo)
      putStrLn "Test all properties with multiple forms:"
      print (test1)
-	 
-	 
---task 2
+
+
+--Task 2 -- Time spent (total man hours): 3hrs 30 min
 
 
 testParse :: Form -> Bool
 testParse f = parse (show f) == [f]
 
+--This test checks the parse with the three forms from the lecture code, and a combination of disjunctions, conjuctions and Implies.
 parsingTest = all testParse [form1,form2,form3,Dsj[form1,form2],Cnj[form2,form3],Impl form1 form2]
+
+--Case 2:
+--For testing, we used form1, form2 and form3
+--1st case: have the same expression written in both String and in Form, see if parse gets the same expression.
+--2nd case: parse the outcome of (show form), see if it reaches the same value.
+--The difference between them is that the first one does not rely on the implementation of show.
 
 testF1 = Impl p (Dsj [p, q]) -- tests testE4 expression
 testS1 = "(1==>+(1 2))"
@@ -90,7 +94,7 @@ testF2 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r) --tests form3 expression
 testS2 = "(*((1==>2) (2==>3))==>(1==>3))"
 test1stCase = all (==True) [(show testF1) == testS1, (show testF2) == testS2]
 
---task 3
+--Task 3 -- Time spent (total man hours): 10 hrs
 
 form2cnf :: Form -> Form
 form2cnf = db . nnf . arrowfree
@@ -114,7 +118,7 @@ deMorgan a (Cnj (b:bs)) = Cnj [Dsj [a, b], deMorgan a (Cnj bs)]
 deMorgan a b            = Dsj [a, b]
 
 
---Task 4
+--Task 4 -- Time spent (total man hours): 7 hours 30 mins
 
 -- Random number generations from: https://stackoverflow.com/questions/22526629/am-i-using-randomrio-wrong
 getRandomInt :: Int -> IO Int

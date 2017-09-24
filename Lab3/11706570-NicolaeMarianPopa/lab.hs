@@ -19,7 +19,7 @@ entails a b = tautology (Impl a b)
 equiv :: Form -> Form -> Bool
 equiv a b = (entails a b) && (entails b a)
 
---For checking the function we thought of taking the exercises from the workshop and devise individual 
+--For checking the function we thought of taking the exercises from the workshop and devise individual
 --tests for each of them. One of us wrote the expressions in a Form form, while another made use of the
 --supplied parser. I used the parser.
 --Time spent: 1h 30min
@@ -40,8 +40,8 @@ testP5 = (not $ tautology expr) && (satisfiable expr) && (not $ contradiction ex
 
 testE6 = "+(1 -1)"
 testE7 = "+(2 -2)"
-testP6 = entails (head $ parse testE6) (head $ parse testE7) 
-testP7 = equiv (head $ parse testE6) (head $ parse testE7) 
+testP6 = entails (head $ parse testE6) (head $ parse testE7)
+testP7 = equiv (head $ parse testE6) (head $ parse testE7)
 
 expressionsCheck = foldl (&&) True [testP1, testP2, testP3, testP4, testP5, testP6, testP7]
 
@@ -49,7 +49,7 @@ expressionsCheck = foldl (&&) True [testP1, testP2, testP3, testP4, testP5, test
 --For testing, we used form1, form2 and form3
 --1st case: have the same expression written in both String and in Form, see if parse gets the same expression.
 --2nd case: parse the outcome of (show form), see if it reaches the same value.
---The difference between them is that the first one does not rely on the implementation of show.	
+--The difference between them is that the first one does not rely on the implementation of show.
 
 --1st case
 testF1 = Impl p (Dsj [p, q]) -- tests testE4 expression
@@ -63,11 +63,11 @@ form2cnf :: Form -> Form
 form2cnf = iterateF . nnf . arrowfree
 
 --apply distribution principle
---the idea is to recursively iterate through the expression and apply the distribution principle 
---whenever we find a disjunction. 
+--the idea is to recursively iterate through the expression and apply the distribution principle
+--whenever we find a disjunction.
 --iterateF iterates does the iterating
 --applyD applies the distribution principle by receiving the two sides of the disjunction.
---We found more information on the CNF form here: 
+--We found more information on the CNF form here:
 --http://www.cse.unsw.edu.au/~meyden/teaching/cs2411/lectures/lecture7.pdf
 --To get the final result iterateF is just composed with nnf and arrowfree functions
 testF (Dsj (a:as)) = True
@@ -98,13 +98,13 @@ testExpression = Dsj[Cnj[p,q],Cnj[p,(Neg q)]]
 iterateList [] = []
 iterateList (x:xs) = (succ x) : iterateList xs
 
---ex5, time spent: xhxmin
+--ex5, time spent: 2hxmin
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
 
 -- getRandomVar :: IO Form
--- getRandomVar = do 
---                  n <- getRandomInt 10 
+-- getRandomVar = do
+--                  n <- getRandomInt 10
 --                  return (Prop (n + 1))
 
 getRandomExprN :: Int -> IO [Form]
@@ -113,12 +113,12 @@ getRandomExprN n = do
                      expr <- getRandomExpr 2
 
 getRandomExpr :: Int -> IO Form
-getRandomExpr d = do 
+getRandomExpr d = do
                     y <- getRandomInt 1
-                    case y of 
+                    case y of
                       0 -> do
                         a <- getRandomInt 5
-                        return (Prop (a + 1))  
+                        return (Prop (a + 1))
                       1 -> do
                       	expr <- getRandomExpr (d-1)
                         return (Neg expr)
