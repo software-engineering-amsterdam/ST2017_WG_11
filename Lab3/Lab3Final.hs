@@ -77,7 +77,7 @@ taskOneTest = do
 
 
 testParse :: Form -> Bool
-testParse f = parse (show f) == [f]
+testParse f = head (parse (show f)) == f
 
 --This test checks the parse with the three forms from the lecture code, and a combination of disjunctions, conjuctions and Implies.
 parsingTest = all testParse [form1,form2,form3,Dsj[form1,form2],Cnj[form2,form3],Impl form1 form2]
