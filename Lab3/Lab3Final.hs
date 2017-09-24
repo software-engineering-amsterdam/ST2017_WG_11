@@ -94,8 +94,10 @@ testF2 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r) --tests form3 expression
 testS2 = "(*((1==>2) (2==>3))==>(1==>3))"
 test1stCase = all (==True) [(show testF1) == testS1, (show testF2) == testS2]
 
---Task 3 -- Time spent (total man hours): 10 hrs
 
+--Task 3 -- Time spent (total man hours): 10 hrs
+--This is the deMorgan solution for the CNF. It simply searches for a disjunction and if it finds one where only on part of the disjunction is a conjunction it wil transform the formulae to a conjunction of disjunctions, otherwise it returns the disjunction as is.
+--Another way to implement this feature is to implement the strategy used in the workshop exercise using a truth table. We reasoned that this solution would result in a longer formulae than would be strictly necessary and that therefore, this solution would be better. 
 form2cnf :: Form -> Form
 form2cnf = db . nnf . arrowfree
 
@@ -119,7 +121,7 @@ deMorgan a b            = Dsj [a, b]
 
 
 --Task 4 -- Time spent (total man hours): 7 hours 30 mins
-
+-- This solution uses a random number generator to recusively generate formulas that incorporate each other.
 -- Random number generations from: https://stackoverflow.com/questions/22526629/am-i-using-randomrio-wrong
 getRandomInt :: Int -> IO Int
 getRandomInt n = randomRIO (1,n) :: IO Int
