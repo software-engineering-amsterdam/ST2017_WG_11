@@ -2,9 +2,10 @@ module Lab3 where
 import Data.List
 import Data.Char
 import Lecture3
+import System.Random
 
 -- Question 1
--- Time spent: (1hour)
+-- Time spent: 1h
 -- Implementation
 -- Description of your method of checking the definitions
 
@@ -77,3 +78,10 @@ form6 = Dsj[Cnj[p,q],Cnj[p,(Neg q)]]
 test = Neg (Dsj [p,q])
 
 -- Question 4
+
+-- formGen :: Form
+
+-- randomInt :: Int -> IO [Int]
+-- randomInt = getStdRandom random
+
+newRand = randomIO :: IO Int

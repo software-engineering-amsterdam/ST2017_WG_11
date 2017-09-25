@@ -80,10 +80,6 @@ test2 = testParse [form1, form2, form3, fContra1, fSatis1, fSatis2, fTauto1, fTa
 form2cnf :: Form -> Form
 form2cnf = db . nnf . arrowfree
 
-f1 = Dsj [p, Neg q]
-f12 = Dsj [p, Cnj [q, Neg r]]
-f2 = Cnj [p, Neg p]
-
 db :: Form -> Form
 db (Prop x)         = Prop x
 db (Neg (Prop x))   = Neg (Prop x)
