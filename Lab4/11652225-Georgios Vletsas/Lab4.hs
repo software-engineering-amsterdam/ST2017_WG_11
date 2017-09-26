@@ -21,13 +21,13 @@ getRandomList x n = do
 setGen :: Int -> Int -> IO (Set Int)
 setGen x n = do
   r <- getRandomInt n
-  l <- getRandomList x r
+  l <- getRandomList x r --Generate random list of length up to x and values up to r
   let  s = list2set l
   return s
 
 
 
---Task 3
+--Task 3 -- 5hrs 30 mins
 
 --Run main to see test results
 main = do testVisual
@@ -37,18 +37,20 @@ main = do testVisual
           testDiffA
           testDiffB
 
-
+--Intersection
 setIntersection :: Ord a => Set a -> Set a -> Set a
 setIntersection (Set a) (Set b) = list2set (a `intersect` b)
 
+--Union
 setUnion :: Ord a => Set a -> Set a -> Set a
 setUnion (Set a) (Set b) = list2set (a `union` b) 
 
+--Difference
 -- https://stackoverflow.com/questions/4573692/haskell-lists-difference
 setDifference :: Ord a => Set a -> Set a -> Set a
 setDifference (Set a) (Set b) = list2set (a \\ b)
 
-
+--Declare properties to check if the operators are true
 
 --the A U B == ((A-B)U(B-A)) U (A^B)
 unionProp :: Ord a => Set a -> Set a -> Bool
@@ -66,7 +68,7 @@ diffAProp a b = setDifference (setUnion a b) (setDifference b a) == a
 diffBProp :: Ord a => Set a -> Set a -> Bool
 diffBProp a b = setDifference (setUnion a b) (setDifference a b) == b
 
-
+--test with random sets
 testVisual = do a <- setGen 8 9
                 b <- setGen 8 9
                 putStrLn "\n({Set A},{set B}):"
@@ -84,8 +86,8 @@ testVisual = do a <- setGen 8 9
                 print (setDifference b a)
                 print (diffBProp a b)
 
---2 hrs so far
 
+--Unable to understand arbitrary, so used QuickCheck to generate lists which then got changed to sets
 --Union quickcheck property
 unionPropQuickCheck :: [Integer] -> [Integer] -> Bool
 unionPropQuickCheck a b = setUnion x y == setUnion ( setUnion (setDifference x y) (setDifference y x) ) (setIntersection x y)
@@ -122,4 +124,3 @@ testDiffB = quickCheck diffBPropQuickCheck
 -- +++ OK, passed 100 tests.
 
 
---Total: 5hrs 20 mins
