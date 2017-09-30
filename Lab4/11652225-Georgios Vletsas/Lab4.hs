@@ -6,7 +6,7 @@ import Test.QuickCheck
 import Lecture4
 import SetOrd
 
-{--Task 1
+{--Task 1 -- 3 Hours
 
 
 1. How would we do exercise 4.14 (pp. 129). Confused on what we're looking for and how to get it.
