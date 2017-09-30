@@ -6,6 +6,17 @@ import Test.QuickCheck
 import Lecture4
 import SetOrd
 
+{--Task 1
+
+
+1. How would we do exercise 4.14 (pp. 129). Confused on what we're looking for and how to get it.
+2. Exercise 4.21 pp 132
+3. What is a powerset
+4. How can russel paradox be used in programming? What are its uses.
+
+
+
+-}
 --Task 2
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
