@@ -134,4 +134,23 @@ testDiffA = quickCheck diffAPropQuickCheck
 testDiffB = quickCheck diffBPropQuickCheck
 -- +++ OK, passed 100 tests.
 
+{--Task 4 --Time spent: 1hr so far
 
+1. What exactly does xRx mean? Relation of x to x?
+2. Is an empty set considered reflexive and irreflective to itself?
+3.
+
+-}
+--Task 5 -- Time spent: 25 minutes
+
+type Rel a = [(a,a)]
+
+invertSet :: Rel a -> Rel a
+invertSet = map ( \(x,y) -> (y,x))
+
+symClos :: Ord a => Rel a -> Rel a 
+symClos a = sort ( nub (a ++ invertSet a) )
+
+test5 = symClos [(2,3),(5,6),(7,2)]
+ 
+ 
