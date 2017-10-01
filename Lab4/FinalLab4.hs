@@ -1,5 +1,5 @@
 
-{--Task 1 -- 3 Hours
+{--Task 1 -- 3 Hours + 1.5 hours (manuel)
 
 
 1. How would we do exercise 4.14 (pp. 129). Confused on what we're looking for and how to get it.
@@ -10,8 +10,7 @@
 -}
 
 
-
-{--Task 4 --Time spent: 1hr so far
+{--Task 4 --Time spent: 1hr so far + 1.5 hours (manuel)
 
 1. What exactly does xRx mean? Relation of x to x?
 2. Is an empty set considered reflexive and irreflective to itself?
@@ -20,13 +19,6 @@
 5.
 
 -}
-
-
-
-
-
-
-
 
 
 -- Exercise 8
