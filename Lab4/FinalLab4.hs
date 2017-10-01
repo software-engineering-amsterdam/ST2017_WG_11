@@ -15,7 +15,9 @@
 
 1. What exactly does xRx mean? Relation of x to x?
 2. Is an empty set considered reflexive and irreflective to itself?
-3.
+3. I do understand the notion of a transitive closure, but the definition R+ = Un>=1 R^n (page 172) is unclear to me.
+4. At Definition 5.75, the definition of a equivelence class is given, where they mention that R is the R-equivalence class of a, or the equivalence class of a modulo R. However, why is it the equivalence class of modulo R?
+5.
 
 -}
 
