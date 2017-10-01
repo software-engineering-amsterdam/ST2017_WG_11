@@ -178,13 +178,14 @@ contains :: Eq a => [a] -> [a] -> Bool
 contains a b = all (\x -> elem x a) b
 
 --properties
-isSymmetric :: Eq a => Rel a -> Bool
-isSymmetric a = contains a rev
+isSymmetric2 :: Eq a => Rel a -> Bool
+isSymmetric2 a = contains a rev
                 where rev = [(y,x) | (x,y) <- a]
 
-isSymmetric2 :: Ord a => Rel a -> Bool
-isSymmetric2 [] = True
-isSymmetric2 ((x,y):xs) | elem (y,x) xs = isSymmetric2 (delete (y,x) xs)
+isSymmetric :: Ord a => Rel a -> Bool
+isSymmetric [] = True
+isSymmetric ((x,y):xs) | x == y = isSymmetric (xs)
+                       | elem (y,x) xs = isSymmetric (delete (y,x) xs)
                        | otherwise = False
 
 isTransitive :: Eq a => Rel a -> Bool
