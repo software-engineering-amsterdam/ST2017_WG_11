@@ -145,6 +145,78 @@ testDiffB = quickCheck diffBPropQuickCheck
 
 -}
 
+-- Exercise 5
+-- Time spent: 45 mins
+-- Just switch the pairs and then use the union function to filter out the repeating elements if they are in the list.
+type Rel a = [(a,a)]
+
+symClos :: Ord a => Rel a -> Rel a
+symClos a = sort $ a ++ [(y,x) | (x,y) <- a, not $ elem (y,x) a]
+
+-- Exercise 6
+-- Time spent: 45 mins
+infixr 5 @@
+
+(@@) :: Eq a => Rel a -> Rel a -> Rel a
+r @@ s =
+  nub [ (x,z) | (x,y) <- r, (w,z) <- s, y == w ]
+
+trSet :: Ord a => Rel a -> Rel a
+trSet [] = []
+trSet xs | length u /= length xs = trSet (u)
+         | otherwise = u
+         where u = union (xs @@ xs) xs
+
+trClos :: Ord a => Rel a -> Rel a
+trClos [] = []
+trClos xs = sort (nub (trSet xs))
+
+-- Exercise 7 
+-- Time spent: 3h
+--checks whether all the first list contains all the elements from the second one
+contains :: Eq a => [a] -> [a] -> Bool
+contains a b = all (\x -> elem x a) b
+
+--properties
+isSymmetric :: Eq a => Rel a -> Bool
+isSymmetric a = contains a rev
+                where rev = [(y,x) | (x,y) <- a]
+
+isSymmetric2 :: Ord a => Rel a -> Bool
+isSymmetric2 [] = True
+isSymmetric2 ((x,y):xs) | elem (y,x) xs = isSymmetric2 (delete (y,x) xs)
+                       | otherwise = False
+
+isTransitive :: Eq a => Rel a -> Bool
+isTransitive a = contains a (a @@ a)
+
+--all relations created by symClos must be symmetric
+symClosProp a = isSymmetric (symClos a)
+
+--all relations created by trClos must the transitive
+trClosProp a = isTransitive (trClos a)
+
+testSymClos :: IO ()
+testSymClos = do
+    l1 <- getRandomList 5 5
+    l2 <- getRandomList 5 5
+    let z = (zip l1 l2) :: Rel Int
+    let ts = symClos z
+    let b = isSymmetric ts :: Bool
+    if b then putStrLn ("This is symmetric: "++ show ts)
+      else putStrLn ("This is NOT symmetric: "++ show ts)
+
+
+testTransClos :: IO ()
+testTransClos = do
+    l1 <- getRandomList 5 5
+    l2 <- getRandomList 5 5
+    let z = (zip l1 l2) :: Rel Int
+    let ts = trClos z
+    let b = isTransitive ts :: Bool
+    if b then putStrLn ("This is transitive: "++ show ts)
+      else putStrLn ("This is NOT transitive: "++ show ts)
+
 
 -- Exercise 8
 -- Time spent: 1.5h
