@@ -1,5 +1,5 @@
 
-module Lecture5
+module Task1
 
 where
 
@@ -17,6 +17,31 @@ values    = [1..9]
 
 blocks :: [[Int]]
 blocks = [[1..3],[4..6],[7..9]]
+
+--Task 1------------------------------
+
+nrcblocks :: [[Int]]
+nrcblocks = [[2..4],[6..8]]
+
+bl' :: Int -> [Int]
+bl' x = concat $ filter (elem x) nrcblocks
+
+subGrid' :: Sudoku -> (Row,Column) -> [Value]
+subGrid' s (r,c) =
+  [ s (r',c') | r' <- bl' r, c' <- bl' c ]
+
+freeInSubgrid' :: Sudoku -> (Row,Column) -> [Value]
+freeInSubgrid' s (r,c) = freeInSeq (subGrid' s (r,c))
+
+subgridSurjective :: Sudoku -> (Row,Column) -> Bool
+subgridSurjective s (r,c) = injective vs where
+   vs = filter (/= 0) (subGrid' s (r,c))
+
+
+sameblock' :: (Row,Column) -> (Row,Column) -> Bool
+sameblock' (r,c) (x,y) = bl' r == bl' x && bl' c == bl' y
+
+--Task 1 code end
 
 showVal :: Value -> String
 showVal 0 = " "
@@ -89,6 +114,7 @@ freeAtPos s (r,c) =
   (freeInRow s r)
    `intersect` (freeInColumn s c)
    `intersect` (freeInSubgrid s (r,c))
+   `intersect` (freeInSubgrid' s (r,c)) --Task 1 change
 
 injective :: Eq a => [a] -> Bool
 injective xs = nub xs == xs
@@ -113,6 +139,9 @@ consistent s = and $
                 ++
                [ subgridInjective s (r,c) |
                     r <- [1,4,7], c <- [1,4,7]]
+                ++
+               [ subgridSurjective s (r,c) | --Task 1 change
+                    r <- [2,6], c <- [2,6]]
 
 extend :: Sudoku -> ((Row,Column),Value) -> Sudoku
 extend = update
@@ -143,6 +172,8 @@ prune (r,c,v) ((x,y,zs):rest)
   | r == x = (x,y,zs\\[v]) : prune (r,c,v) rest
   | c == y = (x,y,zs\\[v]) : prune (r,c,v) rest
   | sameblock (r,c) (x,y) =
+        (x,y,zs\\[v]) : prune (r,c,v) rest
+  | sameblock' (r,c) (x,y) =                     --Task 1 change
         (x,y,zs\\[v]) : prune (r,c,v) rest
   | otherwise = (x,y,zs) : prune (r,c,v) rest
 
