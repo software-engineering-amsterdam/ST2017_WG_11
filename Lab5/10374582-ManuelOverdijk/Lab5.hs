@@ -94,6 +94,17 @@ extendNodeNRC (s,constraints) (r,c,vs) =
      sortBy length3rd $
          pruneNRC (r,c,v) constraints) | v <- vs ]
 
+rsuccNodeNRC :: Node -> IO [Node]
+rsuccNodeNRC (s,cs) = do xs <- getRandomCnstr cs
+                         if null xs
+                            then return []
+                            else return (extendNodeNRC (s,cs\\xs) (head xs))
+
+
+rsolveNsNRC :: [Node] -> IO [Node]
+rsolveNsNRC ns = rsearch rsuccNodeNRC solved (return ns)
+
+
 exampleNRC :: Grid
 exampleNRC = [[0,0,0, 3,0,0, 0,0,0],
              [0,0,0, 7,0,0, 3,0,0],
@@ -119,5 +130,24 @@ mainMinimal = do [r] <- rsolveNs [emptyN]
                  showNode s
                  if uniqueSol node then print "is not unique, and not minimal" else print "is unique, and minimal"
 
+
+-- Exercise 4
+
+-- Generator with 3 empty blocks. (or 4, or 5?)
+-- Only 4 possible
+
+-- Exercise 5
+-- Time spent: 30mins
+
+mainNRC = do [r] <- rsolveNsNRC [emptyN]
+             showNode r
+             s  <- genNRCProblem r
+             showNode s
+             return s
+
+genNRCProblem :: Node -> IO Node
+genNRCProblem n = do ys <- randomize xs
+                     return (minimalize n ys)
+   where xs = filledPositions (fst n)
 
 
