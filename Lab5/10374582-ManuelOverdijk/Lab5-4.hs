@@ -354,6 +354,7 @@ main = do [r] <- rsolveNs [emptyN]
           showNode s
 
 -- Exercise 4
+-- Time spent: 3hours so far
 
 -- Generator with 3 empty blocks. (or 4, or 5?)
 -- Only 4 possible
@@ -361,35 +362,24 @@ main = do [r] <- rsolveNs [emptyN]
 mainGenerate :: IO ()
 mainGenerate = do s <- genRandomSudoku
                   let sudoku = fst s
-                  let constraints = snd s
+                  let _constraints = snd s
                   x <- genProblem s
                   showNode x
-                  print constraints
+                  print _constraints
                   showSudoku sudoku
-                  let isWorkingBlocks = filter (\blockGroup -> uniqueSol (removeAllPositions sudoku (concat blockGroup), constraints)) all_blocks_length3
+                  let isWorkingBlocks = filter (\blocks -> uniqueSol (removeAllPositions sudoku (concat blocks), constraints (removeAllPositions sudoku (concat blocks)))) all_blocks_length3
                   print isWorkingBlocks
-                  let firstBlock = isWorkingBlocks!!2 -- todo
+                  let firstBlock = head isWorkingBlocks -- just use the first one
                   let newSudoku = removeAllPositions sudoku (concat firstBlock)
                   showSudoku newSudoku
-                  print (uniqueSol (newSudoku, constraints))
+                  print (uniqueSol (newSudoku, constraints newSudoku))
 
 
 blockConstrnt = [[((r,c)) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 all_subsequences = subsequences blockConstrnt
 all_blocks_length3 = filter (\blocks -> length blocks == 3) all_subsequences
+all_blocks_length4 = filter (\blocks -> length blocks == 4) all_subsequences
 
 removeAllPositions :: Sudoku -> [(Row,Column)] -> Sudoku
 removeAllPositions sudoku [] = sudoku
 removeAllPositions sudoku ((r,c):xs) = removeAllPositions (extend sudoku ((r,c),0)) xs
---
---genProblemGenerate :: Node -> IO Node
---genProblemGenerate n = do ys <- randomize xs
---                          return (minimalizeEmpty n zs)
---   where xs = filledPositions (fst n)
---         zs = xs
---
---minimalizeEmpty :: Node -> [(Row,Column)] -> Node
---minimalizeEmpty n [] = n
---minimalizeEmpty n ((r,c):rcs) | uniqueSol n' = minimalize n' rcs
---                         | otherwise    = minimalizeEmpty n  rcs
---  where n' = eraseN n (r,c)
