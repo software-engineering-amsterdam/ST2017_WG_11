@@ -6,7 +6,7 @@ import Test.QuickCheck
 import Lecture5
 
 
--- Exercise 1 - Total Time Spent: 6 hours
+-- Exercise 1 - Total Time Spent(Man hours): 6 hours
 
 nRCsolveAndShow :: Grid -> IO[()]
 nRCsolveAndShow gr = nRCsolveShowNs (nRCinitNode gr)
@@ -112,15 +112,66 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
              [0,8,0, 0,4,0, 0,0,0],
              [0,0,2, 0,0,0, 0,0,0]]
 
+-- Exercise 2 - Total Time Spent(Man hours): 2 hours
+-- See Lab5-exercise2.hs
+
+-- Ex 3
+-- Time spent: 4h
+-- To test this we generate a random sudoku, then we call minimalize function
+-- First thing to check is if we work with a problem which actually has a unique solution.
+-- With the result of the minimalize function, we then proceed and eliminate an element at a time and check whether it has multiple solutions
+-- The wrong case would be to still have a unique solution after the deletion of one hint
+-- If all such progressive deletions yield solutions with multiple results, then the function is correct
+main3 :: IO ()
+main3 = do [r] <- rsolveNs [emptyN]
+           showNode r
+           s  <- genProblem r
+           showNode s
+           if uniqueSol s then do
+             putStrLn "problem has a unique solution, now testing all possibilities"
+             mainLoop 0 (length $ filledPositions (fst s)) s
+           else
+             putStrLn "minimalize incorrect, the problem does not have a unique solution"
+
+mainLoop :: Int -> Int -> Node -> IO ()
+mainLoop i n node = do
+                       if i<n then do
+                          let pp = filledPositions (fst node)
+                          let hint = pp!!i
+                          let node1 = eraseN node hint
+                          showNode node1
+                          if uniqueSol node1 then
+                            putStrLn "minimalize is incorrect"
+                          else
+                            mainLoop (i+1) n node
+                       else
+                          putStrLn "minimalize is correct, tested all possibilities!"
+
+
+
+mExample :: Grid
+mExample = [[9,0,6, 0,7,0, 4,0,3],
+            [0,0,0, 4,0,0, 2,0,0],
+            [0,7,0, 0,2,3, 0,1,0],
+
+            [5,0,0, 0,0,0, 1,0,0],
+            [0,4,0, 2,0,8, 0,6,0],
+            [0,0,3, 0,0,0, 0,0,5],
+
+            [0,3,0, 7,0,0, 0,5,0],
+            [0,0,7, 0,0,5, 0,0,0],
+            [4,0,5, 0,1,0, 7,0,8]]
+
+nn = head $ initNode mExample
+pp = filledPositions (fst nn)
+
 
 
 --Exercise 2 - 1.5 hours
 -- In file: Lab5-exercise2.hs
 
 
-
-
--- Exercise 4 - 3 hours
+-- Exercise 4 - Total Time Spent(Man hours): 8 hours
 -- Based on the link below we discovered that five empty blocks is not possible
 -- https://puzzling.stackexchange.com/questions/309/what-is-the-maximum-number-of-empty-3x3-blocks-a-proper-sudoku-can-have
 subBlocks = [[(r,c) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
@@ -158,7 +209,7 @@ removeSubs n ((r,c):rcs) = removeSubs (eraseN n (r,c)) rcs
 
 
 
--- Exercise 5 - 30 minutes (mostly based on the first solution, there I was also first looking to generate random NRC problems)
+-- Exercise 5 - Total Time Spent(Man hours): 30 minutes (mostly based on the first solution, there I was also first looking to generate random NRC problems)
 nRCrsuccNode :: Node -> IO [Node]
 nRCrsuccNode (s,cs) = do xs <- getRandomCnstr cs
                          if null xs
