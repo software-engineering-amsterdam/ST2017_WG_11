@@ -364,6 +364,7 @@ genProblem n = do ys <- randomize xs
 -- Ex 3
 -- Time spent: 2h
 -- To test this we generate a random sudoku, then we call minimalize function
+-- First thing to check is if we work with a problem which actually has a unique solution.
 -- With the result of the minimalize function, we then proceed and eliminate an element at a time and check whether it has multiple solutions
 -- The wrong case would be to still have a unique solution after the deletion of one hint
 -- If all such progressive deletions yield solutions with multiple results, then the function is correct
@@ -372,7 +373,11 @@ main = do [r] <- rsolveNs [emptyN]
           showNode r
           s  <- genProblem r
           showNode s
-          mainLoop 0 (length $ filledPositions (fst s)) s 
+          if uniqueSol s then do
+            putStrLn "problem has a unique solution, now testing all possibilities"
+            mainLoop 0 (length $ filledPositions (fst s)) s 
+          else 
+            putStrLn "minimalize incorrect, the problem does not have a unique solution"
 
 mainLoop :: Int -> Int -> Node -> IO ()
 mainLoop i n node = do 
