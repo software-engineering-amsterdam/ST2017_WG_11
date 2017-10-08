@@ -6,7 +6,7 @@ import Test.QuickCheck
 import Lecture5
 
 
--- Exercise 1 - Total Time Spent: 6 hours
+-- Exercise 1 - Total Time Spent(Man hours): 6 hours
 
 nRCsolveAndShow :: Grid -> IO[()]
 nRCsolveAndShow gr = nRCsolveShowNs (nRCinitNode gr)
@@ -112,7 +112,7 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
              [0,8,0, 0,4,0, 0,0,0],
              [0,0,2, 0,0,0, 0,0,0]]
 
--- Exercise 2 - 2 hours
+-- Exercise 2 - Total Time Spent(Man hours): 2 hours
 -- See Lab5-2.hs
 
 -- Ex 3
@@ -167,7 +167,7 @@ pp = filledPositions (fst nn)
 
 
 
--- Exercise 4 - 3 hours
+-- Exercise 4 - Total Time Spent(Man hours): 8 hours
 
 subBlocks = [[(r,c) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
 
@@ -203,7 +203,7 @@ removeSubs n ((r,c):rcs) = removeSubs (eraseN n (r,c)) rcs
 
 
 
--- Exercise 5 - 30 minutes (mostly based on the first solution, there I was also first looking to generate random NRC problems)
+-- Exercise 5 - Total Time Spent(Man hours): 30 minutes (mostly based on the first solution, there I was also first looking to generate random NRC problems)
 nRCrsuccNode :: Node -> IO [Node]
 nRCrsuccNode (s,cs) = do xs <- getRandomCnstr cs
                          if null xs
