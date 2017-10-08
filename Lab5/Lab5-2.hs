@@ -7,27 +7,12 @@ import Data.List
 import System.Random
 
 
---
--- blocksNRC :: [[Int]]
--- blocksNRC = [[2..4],[6..8]]
---
--- blNRC :: Int -> [Int]
--- blNRC x = concat $ filter (elem x) blocksNRC
---
--- subGridNRC :: Sudoku -> (Row,Column) -> [Value]
--- subGridNRC s (r,c) =
---   [ s (r',c') | r' <- blNRC r, c' <- bl c ]
---
--- subgridNRCInjective :: Sudoku -> (Row,Column) -> Bool
--- subgridNRCInjective s (r,c) = injective vs where
---   vs = filter (/= 0) (subGridNRC s (r,c))
+-- Exercise 2 -- 1.5 hour
+-- The way in which this code is refactored doesn't really help for the NRC solution. You still need to add new block types and a new constraint function. It's a little easier but not much. The code does run at the same speed, no large difference has been found.
 
 
-
-type Row    = Int
-type Column = Int
-type Value  = Int
-type Grid   = [[Value]]
+type Position = (Row,Column)
+type Constrnt = [[Position]]
 
 positions, values :: [Int]
 positions = [1..9]
@@ -35,6 +20,31 @@ values    = [1..9]
 
 blocks :: [[Int]]
 blocks = [[1..3],[4..6],[7..9]]
+
+rowConstrnt     = [[(r,c)| c <- values ] | r <- values ]
+columnConstrnt  = [[(r,c)| r <- values ] | c <- values ]
+blockConstrnt   = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
+
+freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
+freeAtPos' s (r,c) xs = let
+   ys = filter (elem (r,c)) xs
+   in
+   foldl1 intersect (map ((values \\) . map s) ys)
+
+freeAtPos :: Sudoku -> (Row,Column) -> [Value]
+freeAtPos s (r,c) =
+ (freeAtPos' s (r,c) rowConstrnt)
+  `intersect` (freeAtPos' s (r,c) columnConstrnt)
+  `intersect` (freeAtPos' s (r,c) blockConstrnt)
+
+
+
+-- Not changed
+
+type Row    = Int
+type Column = Int
+type Value  = Int
+type Grid   = [[Value]]
 
 showVal :: Value -> String
 showVal 0 = " "
@@ -89,26 +99,6 @@ subGrid s (r,c) =
   [ s (r',c') | r' <- bl r, c' <- bl c ]
 
 
-freeInSeq :: [Value] -> [Value]
-freeInSeq seq = values \\ seq
-
-freeInRow :: Sudoku -> Row -> [Value]
-freeInRow s r =
-  freeInSeq [ s (r,i) | i <- positions  ]
-
-freeInColumn :: Sudoku -> Column -> [Value]
-freeInColumn s c =
-  freeInSeq [ s (i,c) | i <- positions ]
-
-freeInSubgrid :: Sudoku -> (Row,Column) -> [Value]
-freeInSubgrid s (r,c) = freeInSeq (subGrid s (r,c))
-
-freeAtPos :: Sudoku -> (Row,Column) -> [Value]
-freeAtPos s (r,c) =
-  (freeInRow s r)
-   `intersect` (freeInColumn s c)
-   `intersect` (freeInSubgrid s (r,c))
-
 injective :: Eq a => [a] -> Bool
 injective xs = nub xs == xs
 
@@ -143,7 +133,6 @@ update :: Eq a => (a -> b) -> (a,b) -> a -> b
 update f (y,z) x = if x == y then z else f x
 
 type Constraint = (Row,Column,[Value])
-
 type Node = (Sudoku,[Constraint])
 
 showNode :: Node -> IO()
@@ -374,3 +363,16 @@ main = do [r] <- rsolveNs [emptyN]
           showNode r
           s  <- genProblem r
           showNode s
+
+
+genProblem2 :: Node -> IO Node
+-- [(Row, Column)]
+genProblem2 n = do return (minimalize n xs)
+   where xs = filledPositions (fst n)
+
+main2 :: IO ()
+main2 = do [r] <- rsolveNs [emptyN]
+           showNode r
+           s  <- genProblem2 r
+           showNode s
+          --  putStrLn ("This is transitive: "++ show s)
