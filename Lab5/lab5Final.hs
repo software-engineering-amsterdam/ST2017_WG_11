@@ -113,7 +113,7 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
              [0,0,2, 0,0,0, 0,0,0]]
 
 -- Exercise 2 - Total Time Spent(Man hours): 2 hours
--- See Lab5-2.hs
+-- See Lab5-exercise2.hs
 
 -- Ex 3
 -- Time spent: 4h
