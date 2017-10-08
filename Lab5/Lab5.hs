@@ -138,7 +138,7 @@ genProblem3 n = do ys <- randomize xs
                    where xs = filledPositions (fst n)
 
 checkIsMinimized :: Node -> Bool
-checkIsMinimized n = isMinimalized n xs
+checkIsMinimized n = uniqueSol n && isMinimalized n xs
   where xs = filledPositions (fst n)
 
 isMinimalized :: Node -> [(Row,Column)] -> Bool
@@ -149,18 +149,58 @@ isMinimalized n ((r,c):rcs) | uniqueSol n' = False
 
 
 
--- Exercise 4 13.45
-genProblem4 :: Node -> IO Node
-genProblem4 n = do return (minimalize n xs)
-   where xs = filledPositions (fst n)
+-- Exercise 4 - 3 hours
+
+-- Based on the code of Manuel
+
+subBlocks = [[(r,c) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
+
+blockSubs :: Int -> [[[(Int,Int)]]]
+blockSubs n = filter (\bl -> length bl == n) (subsequences subBlocks)
+
+genProblem4 :: Int -> Node -> IO Node
+genProblem4 b n = do
+                  let m = removeSubGrids n (blockSubs b)
+                  return m
 
 main4 :: IO ()
 main4 = do [r] <- rsolveNs [emptyN]
            showNode r
-           s  <- genProblem4 r
+           s <- genProblem4 3 r
            showNode s
+           s2 <- genProblem4 4 r
+           showNode s2
+
+removeSubGrids :: Node -> [[[(Int,Int)]]] -> Node
+removeSubGrids n [] = emptyN
+removeSubGrids n (sg:sgs) | checkIsMinimized m = m
+                          | otherwise = removeSubGrids n sgs
+                          where m = minimalize rsg rsgfilled
+                                rsg = removeSubs n (concat sg)
+                                rsgfilled = filledPositions (fst rsg)
+
+removeSubs :: Node -> [(Row,Column)] -> Node
+removeSubs n [] = n
+removeSubs n ((r,c):rcs) = removeSubs (eraseN n (r,c)) rcs
 
 
+-- genProblem4 :: Int -> Node -> Node
+-- genProblem4 b n = removeSubGrids n (blockSubs b)
+--
+-- isEmptyNode :: Node -> Bool
+-- isEmptyNode n = filledPositions n == []
+--
+-- main4 :: IO ()
+-- main4 = do [r] <- rsolveNs [emptyN]
+--            let s2 = genProblem4 4 r
+--            if (isEmptyNode s2)
+--              then
+--                return main4
+--              else
+--                showNode r
+--                showNode s2
+--                s <- genProblem4 3 r
+--                showNode s
 
 
 -- Exercise 5 - 15 minutes (mostly based on the first solution, there I was also first looking to generate ranodm NRC problems)
