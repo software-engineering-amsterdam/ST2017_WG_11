@@ -174,12 +174,19 @@ main4 = do [r] <- rsolveNs [emptyN]
            s2 <- genProblem4 4 r
            showNode s2
 
+-- removeSubGrids :: Node -> [[[(Int,Int)]]] -> Node
+-- removeSubGrids n [] = emptyN
+-- removeSubGrids n (sg:sgs) | checkIsMinimized m = m
+--                           | otherwise = removeSubGrids n sgs
+--                           where m = minimalize rsg rsgfilled
+--                                 rsg = removeSubs n (concat sg)
+--                                 rsgfilled = filledPositions (fst rsg)
+
 removeSubGrids :: Node -> [[[(Int,Int)]]] -> Node
 removeSubGrids n [] = emptyN
-removeSubGrids n (sg:sgs) | checkIsMinimized m = m
+removeSubGrids n (sg:sgs) | uniqueSol rsg = minimalize rsg rsgfilled
                           | otherwise = removeSubGrids n sgs
-                          where m = minimalize rsg rsgfilled
-                                rsg = removeSubs n (concat sg)
+                          where rsg = removeSubs n (concat sg)
                                 rsgfilled = filledPositions (fst rsg)
 
 removeSubs :: Node -> [(Row,Column)] -> Node

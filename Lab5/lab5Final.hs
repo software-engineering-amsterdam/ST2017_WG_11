@@ -113,4 +113,38 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
              [0,0,2, 0,0,0, 0,0,0]]
 
 
-             
+
+
+
+
+-- Exercise 4 - 3 hours
+
+subBlocks = [[(r,c) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
+
+blockSubs :: Int -> [[[(Int,Int)]]]
+blockSubs n = filter (\bl -> length bl == n) (subsequences subBlocks)
+
+genProblem4 :: Int -> Node -> IO Node
+genProblem4 b n = do
+                  let m = removeSubGrids n (blockSubs b)
+                  return m
+
+-- Should recall main4 if problem wasn't found.
+main4 :: IO ()
+main4 = do [r] <- rsolveNs [emptyN]
+           showNode r
+           s <- genProblem4 3 r
+           showNode s
+           s2 <- genProblem4 4 r
+           showNode s2
+
+removeSubGrids :: Node -> [[[(Int,Int)]]] -> Node
+removeSubGrids n [] = emptyN
+removeSubGrids n (sg:sgs) | uniqueSol rsg = minimalize rsg rsgfilled
+                          | otherwise = removeSubGrids n sgs
+                          where rsg = removeSubs n (concat sg)
+                                rsgfilled = filledPositions (fst rsg)
+
+removeSubs :: Node -> [(Row,Column)] -> Node
+removeSubs n [] = n
+removeSubs n ((r,c):rcs) = removeSubs (eraseN n (r,c)) rcs
