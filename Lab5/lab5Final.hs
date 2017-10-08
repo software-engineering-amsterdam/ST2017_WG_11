@@ -114,8 +114,15 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
 
 
 
--- Exercise 4 - 3 hours
+--Exercise 2 - 1.5 hours
+-- In file: Lab5-exercise2.hs
 
+
+
+
+-- Exercise 4 - 3 hours
+-- Based on the link below we discovered that five empty blocks is not possible
+-- https://puzzling.stackexchange.com/questions/309/what-is-the-maximum-number-of-empty-3x3-blocks-a-proper-sudoku-can-have
 subBlocks = [[(r,c) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
 
 blockSubs :: Int -> [[[(Int,Int)]]]
@@ -125,6 +132,7 @@ genProblem4 :: Int -> Node -> IO Node
 genProblem4 b n = do
                   let m = removeSubGrids n (blockSubs b)
                   return m
+
 
 -- Should recall main4 if problem wasn't found.
 main4 :: IO ()
