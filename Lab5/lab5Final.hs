@@ -7,7 +7,6 @@ import Lecture5
 
 
 -- Exercise 1 - Total Time Spent(Man hours): 6 hours
-
 nRCsolveAndShow :: Grid -> IO[()]
 nRCsolveAndShow gr = nRCsolveShowNs (nRCinitNode gr)
 
@@ -112,11 +111,14 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
              [0,8,0, 0,4,0, 0,0,0],
              [0,0,2, 0,0,0, 0,0,0]]
 
+
+
 -- Exercise 2 - Total Time Spent(Man hours): 2 hours
 -- See Lab5-exercise2.hs
 
--- Ex 3
--- Time spent: 4h
+
+
+-- Exercise 3 - Total Time Spent(Man hours): 4h
 -- To test this we generate a random sudoku, then we call minimalize function
 -- First thing to check is if we work with a problem which actually has a unique solution.
 -- With the result of the minimalize function, we then proceed and eliminate an element at a time and check whether it has multiple solutions
@@ -147,8 +149,6 @@ mainLoop i n node = do
                        else
                           putStrLn "minimalize is correct, tested all possibilities!"
 
-
-
 mExample :: Grid
 mExample = [[9,0,6, 0,7,0, 4,0,3],
             [0,0,0, 4,0,0, 2,0,0],
@@ -166,9 +166,6 @@ nn = head $ initNode mExample
 pp = filledPositions (fst nn)
 
 
-
---Exercise 2 - 1.5 hours
--- In file: Lab5-exercise2.hs
 
 
 -- Exercise 4 - Total Time Spent(Man hours): 8 hours
@@ -209,7 +206,9 @@ removeSubs n ((r,c):rcs) = removeSubs (eraseN n (r,c)) rcs
 
 
 
--- Exercise 5 - Total Time Spent(Man hours): 30 minutes (mostly based on the first solution, there I was also first looking to generate random NRC problems)
+
+-- Exercise 5 - Total Time Spent(Man hours): 30 minutes
+-- mostly based on the first solution, there I was also first looking to generate random NRC problems
 nRCrsuccNode :: Node -> IO [Node]
 nRCrsuccNode (s,cs) = do xs <- getRandomCnstr cs
                          if null xs
