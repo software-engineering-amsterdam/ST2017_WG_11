@@ -6,7 +6,7 @@ import Test.QuickCheck
 import Lecture5
 
 
--- Exercise 1 - 2,5 hours
+-- Exercise 1 - Total Time Spent: 6 hours
 
 nRCsolveAndShow :: Grid -> IO[()]
 nRCsolveAndShow gr = nRCsolveShowNs (nRCinitNode gr)
@@ -113,4 +113,19 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
              [0,0,2, 0,0,0, 0,0,0]]
 
 
-             
+-- Exercise 5 - 30 minutes (mostly based on the first solution, there I was also first looking to generate random NRC problems)
+nRCrsuccNode :: Node -> IO [Node]
+nRCrsuccNode (s,cs) = do xs <- getRandomCnstr cs
+                         if null xs
+                            then return []
+                            else return
+                            (nRCextendNode (s,cs\\xs) (head xs))
+
+nRCrsolveNs :: [Node] -> IO [Node]
+nRCrsolveNs ns = rsearch nRCrsuccNode solved (return ns)
+
+main5 :: IO ()
+main5 = do [r] <- nRCrsolveNs [emptyN]
+           showNode r
+           s  <- genProblem r
+           showNode s
