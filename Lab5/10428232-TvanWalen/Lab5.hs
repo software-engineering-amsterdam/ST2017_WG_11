@@ -119,6 +119,8 @@ nRCexample = [[0,0,0, 3,0,0, 0,0,0],
 -- See Lab5-2.hs
 
 
+
+
 -- Exercise 3 - 1 hour
 -- If it returns a sudoku it is a minimum sudoku. We checked by rewriting the minimalize function to check all possibilites one more time.
 main3 :: IO ()
@@ -163,6 +165,7 @@ genProblem4 b n = do
                   let m = removeSubGrids n (blockSubs b)
                   return m
 
+-- Should recall main4 if problem wasn't found.
 main4 :: IO ()
 main4 = do [r] <- rsolveNs [emptyN]
            showNode r
@@ -201,6 +204,9 @@ removeSubs n ((r,c):rcs) = removeSubs (eraseN n (r,c)) rcs
 --                showNode s2
 --                s <- genProblem4 3 r
 --                showNode s
+
+
+
 
 
 -- Exercise 5 - 15 minutes (mostly based on the first solution, there I was also first looking to generate ranodm NRC problems)
