@@ -170,7 +170,12 @@ pp = filledPositions (fst nn)
 
 -- Exercise 4 - Total Time Spent(Man hours): 8 hours
 -- Based on the link below we discovered that five empty blocks is not possible
--- https://puzzling.stackexchange.com/questions/309/what-is-the-maximum-number-of-empty-3x3-blocks-a-proper-sudoku-can-have
+{-- https://puzzling.stackexchange.com/questions/309/what-is-the-maximum-number-of-empty-3x3-blocks-a-proper-sudoku-can-have
+In order for a sudoku puzzle to have a solution with 5 empty boxes, we must have:
+-4 solved boxes on odd boxes
+-2 solved boxes on corners
+But no combination exists for which those two can happen together. As such solving a puzzle with 5 empty boxes is impossible. We need at least 5 out of 9 to be solved boxes to solve a puzzle.
+-}
 subBlocks = [[(r,c) | r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
 
 blockSubs :: Int -> [[[(Int,Int)]]]
