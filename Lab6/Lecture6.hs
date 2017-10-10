@@ -136,7 +136,7 @@ primeTestF n = do
    a <- randomRIO (2, n-1) :: IO Integer
    return (exM a (n-1) n == 1)
 
-primeTestsF :: Int -> Integer -> IO Bool
+primeTestsF :: Integer -> Integer -> IO Bool
 primeTestsF k n = do
  as <- sequence $ fmap (\_-> randomRIO (2,n-1)) [1..k]
  return (all (\ a -> exM a (n-1) n == 1) as)
@@ -153,7 +153,7 @@ mrComposite x n = let
   in
     exM x s n /= 1 && last fs /= (n-1)
 
-primeMR :: Int -> Integer -> IO Bool
+primeMR :: Integer -> Integer -> IO Bool
 primeMR _ 2 = return True
 primeMR 0 _ = return True
 primeMR k n = do

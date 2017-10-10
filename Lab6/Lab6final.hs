@@ -44,13 +44,81 @@ composites :: [Integer]
 composites = filter (\x -> not (prime x)) [2..]
 
 
--- Exercise 4 - time spent:
---when increasing k the least number which is able to fool the algorithm also decreases
-testFP :: Int -> [Integer] -> IO ()
-testFP _ []  = putStrLn "check worked on all numbers"
-testFP k (n:ns) = do
+-- Exercise 4 - time spent: 1 hour
+-- Increasing k increases the number of candidates tested and thus the probability that the results are true (less false positives).
+-- as shown by executing with differnt k's. It identifies lower composites more accurately as not prime.
+
+-- Results
+-- N: 100, k: 1, Min: 9,  Rest: [9,9,9,9,9,9,9,9,9,9]                        | (0.05 secs, 21,829,512 bytes)
+-- N: 100, k: 2, Min: 9,  Rest: [9,15,15,15,15,15,15,21,21,25]               | (1.12 secs, 591,383,376 bytes)
+-- N: 100, k: 3, Min: 65, Rest: [65,65,85,85,91,91,91,91,91,91]              | (2.53 secs, 1,396,726,120 bytes)
+-- N: 100, k: 4, Min: 91, Rest: [91,91,435,561,561,561,561,561,561,561]      | (9.55 secs, 5,447,005,392 bytes)
+-- N: 100, k: 5, Min: 65, Rest: [65,91,561,561,561,561,1105,1105,1105,1105]  | (17.48 secs, 10,199,674,544 bytes)
+
+test4 :: Integer -> [Integer] -> IO ()
+test4 _ []  = putStrLn "check worked on all numbers"
+test4 k (n:ns) = do
                     cond <- primeTestsF k n
                     if cond then
                       putStrLn ("number " ++ show n ++ " fooled the algorithm!")
                     else
-                      testFP k ns
+                      test4 k ns
+
+
+
+-- Exercise 5 -- 45 minutes
+--Carmichael numbers are special numbers which satisfy Fermat's little theorem, even though they are not prime
+--They are composite numbers which are square-free (no duplicate factors) and must have three positive factors
+--We ran a number of tests to check whether carmichael numbers indeed fool Fermat's little theorem
+--By increasing k and using primeTestsF, we've discovered that the results are inconsistent.
+--The definition says that the numbers should always fool the test, but in practice they don't
+--With a k of 100 only large enough numbers are able to fool it
+
+--if applied enough times, even the first number of this list will pass Fermat's primality check
+
+
+carmichael :: [Integer]
+carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) |
+      k <- [2..],
+      prime (6*k+1),
+      prime (12*k+1),
+      prime (18*k+1) ]
+
+--how many times a carmichael number is registered as prime?
+test5 :: Integer -> Integer -> Integer -> IO ()
+test5 n nb k = do
+  r <- testGeneric primeTestsF n nb k 0
+  putStrLn (show nb ++ " is found "++show r++ " out of "++show n++" times to be a prime.")
+
+--generic test function (also used in 6)
+testGeneric :: (Integer -> Integer -> IO Bool) -> Integer -> Integer -> Integer -> Integer -> IO Integer
+testGeneric test 0 _ _ c = do return c
+testGeneric test n nb k c = do
+                        res <- test k nb
+                        if res then
+                          testGeneric test (n-1) nb k (c+1)
+                        else
+                          testGeneric test (n-1) nb k c
+
+
+
+-- Exercise 6 - 1,5 hours
+--Miller
+test6 :: Integer -> Integer -> Integer -> IO ()
+test6 n nb k = do
+  r <- testGeneric primeMR n nb k 0
+  putStrLn (show nb ++ " is found "++show r++ " out of "++show n++" times to be a prime.")
+
+--find large Mersenne numbers?
+--complexity increases a lot, in 10 minutes it finds the 24th Mersenne number (19937)
+--comparing results with the wikipedia list, the algorithm finds the correct Mersenne numbers, even for a small k
+findLM :: Integer -> [Integer] -> IO ()
+findLM _ []     = do putStrLn ("end")
+findLM k (n:ns) = do
+                    let nr = (2^n - 1)
+                    cond <- primeMR k nr
+                    if cond then
+                      putStrLn ("Mersenne: " ++ show n)
+                    else
+                      putStr ""
+                    findLM k ns
