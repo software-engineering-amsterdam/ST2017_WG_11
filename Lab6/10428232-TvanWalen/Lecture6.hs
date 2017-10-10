@@ -111,7 +111,27 @@ expM ::  Integer -> Integer -> Integer -> Integer
 expM x y = rem (x^y)
 
 exM :: Integer -> Integer -> Integer -> Integer
-exM = expM -- to be replaced by a fast version
+exM = exM' -- to be replaced by a fast version
+
+-- decToBin function used from: https://stackoverflow.com/a/1959734
+decToBin x = reverse $ decToBin' x
+  where
+    decToBin' 0 = []
+    decToBin' y = let (a,b) = quotRem y 2 in [b] ++ decToBin' a
+
+-- Convert power y to base 2 and put in reversed list.
+-- Loop over list, if 1 than use output else just calculate power for next function
+exM' :: Integer -> Integer -> Integer -> Integer
+exM' x y n = fex x n (reverse (decToBin y)) x
+
+fex :: Integer -> Integer ->  [Integer] -> Integer -> Integer
+fex x n [] t = 1
+fex x n (k:ks) t | k == 1 = multM t (fex x n ks tn) n
+                 | otherwise = fex x n ks tn
+  where tn = multM t t n
+
+
+
 
 primeTestF :: Integer -> IO Bool
 primeTestF n = do
@@ -142,9 +162,9 @@ primeMR k n = do
     a <- randomRIO (2, n-1) :: IO Integer
     if exM a (n-1) n /= 1 || mrComposite a n
     then return False else primeMR (k-1) n
-
-composites :: [Integer]
-composites = error "not yet implemented"
+--
+-- composites :: [Integer]
+-- composites = error "not yet implemented"
 
 encodeDH :: Integer -> Integer -> Integer -> Integer
 encodeDH p k m = m*k `mod` p
