@@ -37,7 +37,7 @@ composites = filter (not.prime) [2..]
 
 --ex4
 --when increasing k the least number which is able to fool the algorithm also decreases
-testFP :: Int -> [Integer] -> IO ()
+testFP :: Integer -> [Integer] -> IO ()
 testFP _ []  = putStrLn "check worked on all numbers"
 testFP k (n:ns) = do
                     cond <- primeTestsF k n
@@ -61,25 +61,37 @@ carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) |
       prime (12*k+1), 
       prime (18*k+1) ]     
 
+--generic test function
+testG :: (Integer -> Integer -> IO Bool) -> Integer -> Integer -> Integer -> Integer -> IO Integer
+testG test 0 _ _ c = do return c
+testG test n nb k c = do
+                        res <- test k nb
+                        if res then
+                          testG test (n-1) nb k (c+1)
+                        else 
+                          testG test (n-1) nb k c
+
 --how many times a carmichael number is registered as prime?
 testCar :: Integer -> Integer -> Integer -> IO Integer
-testCar 0 _ c = do return c
-testCar n nb c = do
-                    test <- primeTestsF 100 nb
-                    if test then
-                        testCar (n-1) nb (c+1)
-                     else 
-                        testCar (n-1) nb c
+testCar n nb k = testG primeTestsF n nb k 0
 
 --if applied enough times, even the first number of this list will pass Fermat's primality check
 
 --ex6
---primeMR 3 (head $ take 1 carmichael)
+--Miller
 testMR :: Integer -> Integer -> Integer -> IO Integer
-testMR 0 _ c = do return c
-testMR n nb c = do
-                    test <- primeMR 10 nb
-                    if test then
-                        testCar (n-1) nb (c+1)
-                     else 
-                        testCar (n-1) nb c
+testMR n nb k = testG primeMR n nb k 0
+
+--find large Mersenne numbers?
+--complexity increases a lot, in 10 minutes it finds the 24th Mersenne number (19937)
+--comparing results with the wikipedia list, the algorithm finds the correct Mersenne numbers, even for a small k
+findLM :: Integer -> [Integer] -> IO ()
+findLM _ []  = putStrLn "end"
+findLM k (n:ns) = do
+                    let nr = (2^n - 1)
+                    cond <- primeMR k nr
+                    if cond then
+                      putStrLn ("Mersenne: " ++ show n)
+                    else 
+                      putStr ""
+                    findLM k ns
