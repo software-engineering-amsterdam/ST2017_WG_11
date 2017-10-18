@@ -172,3 +172,6 @@ rsaAlg m k = do
             let dc = rsaDecode (d,n) c
             print ("Initial No: " ++ show m ++ ". Cipher: " ++ show c ++ ". Decypher: " ++ show dc)
             return (m == dc)
+
+--run this
+sampleTest = rsaAlg 124125152 15
