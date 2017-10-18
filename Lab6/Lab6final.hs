@@ -100,7 +100,13 @@ testGeneric test n nb k c = do
                         else
                           testGeneric test (n-1) nb k c
 
-
+--params:
+--n - how many times to run the test
+--nb - number to test for primality
+--k - required by the random primality testing. if k is bigger the test is more accurate
+--Run this
+test5a = test5 10 31 2
+test5b = test5 1000 7919 1
 
 -- Exercise 6 - 1,5 hours
 --Miller
@@ -108,6 +114,14 @@ test6 :: Integer -> Integer -> Integer -> IO ()
 test6 n nb k = do
   r <- testGeneric primeMR n nb k 0
   putStrLn (show nb ++ " is found "++show r++ " out of "++show n++" times to be a prime.")
+
+--params:
+--n - how many times to run the test
+--nb - number to test for primality
+--k - required by the random primality testing. if k is bigger the test is more accurate
+--Run this
+test6a = test6 10 31 2
+test6b = test6 1000 7919 1
 
 --find large Mersenne numbers?
 --complexity increases a lot, in 10 minutes it finds the 24th Mersenne number (19937)
@@ -123,7 +137,9 @@ findLM k (n:ns) = do
                       putStr ""
                     findLM k ns
 
-
+--Run this, avoid 1 in the input list
+testFindLM = findLM 3 primes
+testFindLM2 = findLM 2 [2..100]
 
 
 -- Exercise 7 (Bonus) --Time spent: 2 hours
