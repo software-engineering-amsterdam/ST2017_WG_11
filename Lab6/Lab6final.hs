@@ -107,6 +107,8 @@ testGeneric test n nb k c = do
 --Run this
 test5a = test5 10 31 2
 test5b = test5 1000 7919 1
+test5car = test5 1000 294409 2--carmichael number, which is able to fool the test
+test5car2 = test5 1000 294409 100--even with a high k of 100, the number can still fool the test
 
 -- Exercise 6 - 1,5 hours
 --Miller
@@ -121,7 +123,9 @@ test6 n nb k = do
 --k - required by the random primality testing. if k is bigger the test is more accurate
 --Run this
 test6a = test6 10 31 2
-test6b = test6 1000 7919 1
+test6b = test6 1000 294409 2
+test6car = test6 1000 294409 2
+test6car2 = test6 1000 294409 100
 
 --find large Mersenne numbers?
 --complexity increases a lot, in 10 minutes it finds the 24th Mersenne number (19937)
